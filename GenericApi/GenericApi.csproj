@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>0.1.0</Version>
+    <Authors>Steven Knox</Authors>
+    <Company />
+    <Description>Generic WebAPI, Service Layer and Repository for AspNetCore</Description>
+    <PackageLicenseUrl>https://github.com/stevenknox/GenericApi/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/stevenknox/GenericApi</PackageProjectUrl>
+    <PackageReleaseNotes>Initial Working Release</PackageReleaseNotes>
+    <Copyright>Copyright Steven Knox 2017</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.1" />
+  </ItemGroup>
+
+</Project>
