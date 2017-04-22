@@ -23,7 +23,7 @@ namespace GenericApi.Tests
             // Run the test against one instance of the context
             using (var context = new SampleContext(options))
             {
-                var service = new GenericService<SampleEntity>(context);
+                var service = new GenericService<SampleEntity, SampleContext>(context);
 
                 service.Add(new SampleEntity { Name = data });
             }
@@ -46,8 +46,8 @@ namespace GenericApi.Tests
             // Run the test against one instance of the context
             using (var context = new SampleContext(options))
             {
-                var service = new GenericService<SampleEntity>(context);
-                var controller = new GenericServiceController<SampleEntity>(service);
+                var service = new GenericService<SampleEntity, SampleContext>(context);
+                var controller = new GenericServiceController<SampleEntity, SampleContext>(service);
 
                 service.Add(new SampleEntity { Name = data });
             }

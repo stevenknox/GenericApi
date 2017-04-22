@@ -3,18 +3,18 @@
 namespace GenericApi
 {
     [GenericControllerNameConvention]
-    public class GenericServiceController<T> : ServiceController<T>
+    public class GenericServiceController<T, TContext> : ServiceController<T, TContext>
     {
-        public GenericServiceController(IGenericService<T> service) : base(service) { }
+        public GenericServiceController(IGenericService<T, TContext> service) : base(service) { }
     }
 
     [Produces("application/json")]
     [Route("api/[controller]")]
-    public class ServiceController<T> : Controller
+    public class ServiceController<T, TContext> : Controller
     {
-        private IGenericService<T> _service;
+        private IGenericService<T, TContext> _service;
 
-        public ServiceController(IGenericService<T> service)
+        public ServiceController(IGenericService<T, TContext> service)
         {
             _service = service;
         }

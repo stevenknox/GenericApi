@@ -5,8 +5,10 @@ using System.Reflection;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
+using Microsoft.Extensions.Options;
 
 //https://github.com/aspnet/Entropy/tree/42171b706540d23e0298c8f16a4b44a9ae805c0a/samples/Mvc.GenericControllers
 //https://docs.microsoft.com/en-us/aspnet/core/mvc/advanced/app-parts
@@ -17,17 +19,17 @@ namespace GenericApi
     {
         public static void AddGenericServices(this IServiceCollection services)
         {
-            services.AddScoped(typeof(IGenericService<>), typeof(GenericService<>));
-            services.AddScoped(typeof(IGenericService<,>), typeof(GenericServiceBase<,>));
+            services.AddScoped(typeof(IGenericService<,>), typeof(GenericService<,>));
+            services.AddScoped(typeof(IGenericService<,,>), typeof(GenericServiceBase<,,>));
         }
 
     }
 
     public static class GenericControllersMiddleware
-    {
-        public static void AddGenericControllers(this IMvcBuilder builder, string assemblyName)
+    {   
+        public static void AddGenericControllers(this IMvcBuilder builder, string assemblyName, Type db)
         {
-            builder.ConfigureApplicationPartManager(p => p.FeatureProviders.Add(new GenericControllerFeatureProvider(assemblyName)));
+            builder.ConfigureApplicationPartManager(p => p.FeatureProviders.Add(new GenericControllerFeatureProvider(assemblyName, db)));
         }
 
     }
@@ -41,7 +43,7 @@ namespace GenericApi
             var deps = DependencyContext.Default;
             foreach (var compilationLibrary in deps.CompileLibraries)
             {
-                if (compilationLibrary.Name.Contains(assemblyName))
+                if (compilationLibrary.Name.ToLower().Contains(assemblyName.ToLower()))
                 {
                     var assembly = Assembly.Load(new AssemblyName(compilationLibrary.Name));
                     loadableAssemblies.Add(assembly);
@@ -63,8 +65,10 @@ namespace GenericApi
     public class GenericControllerFeatureProvider : IApplicationFeatureProvider<ControllerFeature>
      {
         public string AssemblyName;
-        public GenericControllerFeatureProvider(string assemblyName)
+        public Type db;
+        public GenericControllerFeatureProvider(string assemblyName, Type context)
         {
+            db = context;
             AssemblyName = assemblyName;
         }
 
@@ -78,7 +82,7 @@ namespace GenericApi
                 if (!feature.Controllers.Any(t => t.Name == typeName))
                 {
                     // There's no 'real' controller for this entity, so add the generic version.
-                    var controllerType = typeof(GenericServiceController<>).MakeGenericType(entityType.AsType()).GetTypeInfo();
+                    var controllerType = typeof(GenericServiceController<,>).MakeGenericType(entityType.AsType(), db).GetTypeInfo();
                     feature.Controllers.Add(controllerType);
                 }
             }
@@ -90,7 +94,7 @@ namespace GenericApi
     {
          public void Apply(ControllerModel controller)
         {
-            if (controller.ControllerType.GetGenericTypeDefinition() != typeof(GenericServiceController<>))
+            if (controller.ControllerType.GetGenericTypeDefinition() != typeof(GenericServiceController<,>))
             {
                 throw new Exception("Not a generic controller!");
             }

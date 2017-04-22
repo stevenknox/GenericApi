@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace GenericApi
 {
-    public interface IGenericService<T, Tid>
+    public interface IGenericService<T, Tid, TContext>
     {
         T Add(T entity);
         T AddOrUpdate(T entity);
@@ -15,7 +15,7 @@ namespace GenericApi
         T Update(T entity);
     }
 
-    public interface IGenericService<T> : IGenericService<T, int>
+    public interface IGenericService<T, TContext> : IGenericService<T, int, TContext>
     {
     }
 }
