@@ -32,7 +32,7 @@ namespace SampleWebApi
 
             services.
                 AddMvc()
-                .AddGenericControllers("SampleWebApi", typeof(SampleContext));
+                .AddGenericControllers(nameof(SampleWebApi), typeof(SampleContext));
 
             services.AddGenericServices();
         }
