@@ -15,11 +15,11 @@ Under ConfigureServices within the Startup.cs you can enable the generic service
 
      services.AddGenericServices();
 
-In the same startup mthod you can register dynamic WebApi controllers by adding the following method to AddMvc(). Replace *SampleWebApi* with the name of the Assembly containing your EF Entities and replace SampleContext with your EF DbContext.
+In the same startup mthod you can register dynamic WebApi controllers by adding the following method to AddMvc(). Replace *SampleWebApi* with the name of the Assembly containing your EF Entities.
 
-    services.AddMvc().AddGenericControllers(nameof(StoreWebApi), typeof(StoreDbContext));
+    services.AddMvc().AddGenericControllers(nameof(StoreWebApi));
 
-A full ConfigureServices method that includes adding an Entity Framework  DbContext may look like:
+A complete ConfigureServices method that includes adding an Entity Framework DbContext may look like:
 
      public void ConfigureServices(IServiceCollection services)
         {
@@ -28,14 +28,16 @@ A full ConfigureServices method that includes adding an Entity Framework  DbCont
 
             services.
                 AddMvc().
-                AddGenericControllers(nameof(StoreWebApi), typeof(StoreDbContext));
+                AddGenericControllers(nameof(StoreWebApi));
 
             services.AddGenericServices();
         }
 
-**Note:** Current version only works with one DbContext which is specified during middleware registration in Startup.cs
+**Note:** Current version can only support generic services for one DbContext. If you have more than one DbContext within your application you must explicitly specify the DbContext to use during the middleware registration
 
-To able dynamic API and Service generation for your Entity Framework entities ensure it inherits from the *GenericEntity* base class. and has a primary key called *Id* . The Id can be any primative type.
+    .AddGenericControllers(nameof(StoreWebApi), typeof(StoreDbContext));
+
+To able dynamic API and Service generation for your Entity Framework entities ensure it inherits from the *GenericEntity* base class and has a primary key called *Id* . The Id can be any primative type.
 
     public class Product: GenericEntity
     {
