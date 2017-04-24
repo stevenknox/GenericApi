@@ -27,18 +27,17 @@ namespace SampleWebApi
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddDbContext<SampleContext>(options =>
-              options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<StoreDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.
-                AddMvc()
-                .AddGenericControllers(nameof(SampleWebApi), typeof(SampleContext));
-
+                AddMvc().
+                AddGenericControllers(nameof(SampleWebApi));
+            //nameof(SampleWebApi), typeof(StoreDbContext)
             services.AddGenericServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, SampleContext context)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, StoreDbContext context)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -62,7 +61,7 @@ namespace SampleWebApi
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            SampleDataSeeder.Initialize(context);
+            DataSeeder.Initialize(context);
         }
 
     }
