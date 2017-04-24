@@ -42,9 +42,9 @@ namespace GenericApi
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody]T input)
         {
-            var entity = _service.FindById(id);
+           // var entity = _service.FindById(id);
 
-            var result = _service.Update(entity);
+            var result = _service.Update(input);
 
             return Ok(result);
         }
