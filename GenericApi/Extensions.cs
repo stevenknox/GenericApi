@@ -1,10 +1,55 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyModel;
 
 namespace GenericApi
 {
-    public static class EntityFrameworkExtensions
+    public static class Extensions
     {
+        public static List<Assembly> FindAssemblies(string assemblyName)
+        {
+            var loadableAssemblies = new List<Assembly>();
+
+            var deps = DependencyContext.Default;
+            foreach (var compilationLibrary in deps.CompileLibraries)
+            {
+                if (compilationLibrary.Name.ToLower().Contains(assemblyName.ToLower()))
+                {
+                    var assembly = Assembly.Load(new AssemblyName(compilationLibrary.Name));
+                    loadableAssemblies.Add(assembly);
+                }
+            }
+
+            return loadableAssemblies;
+        }
+
+        public static IEnumerable<Type> FindDerivedTypes(Assembly assembly, Type baseType)
+        {
+            return assembly.GetTypes().Where(t => baseType.IsAssignableFrom(t));
+        }
+
+        public static Type GetPropertyType(this TypeInfo obj, String name)
+        {
+                if (obj == null) { return null; }
+
+                PropertyInfo info = obj.GetProperty(name);
+                if (info == null) { return null; }
+
+                return info.GetType();
+        }
+
+        public static T GetPropertyType<T>(this TypeInfo obj, String name)
+        {
+            Object retval = GetPropertyType(obj, name);
+            if (retval == null) { return default(T); }
+
+            // throws InvalidCastException if types are incompatible
+            return (T)retval;
+        }
+
         public static void AddOrUpdate(this DbContext ctx, object entity)
         {
             var entry = ctx.Entry(entity);

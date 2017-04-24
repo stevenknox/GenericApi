@@ -6,18 +6,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GenericApi
 {
-    public class GenericService<T, TContext> : GenericServiceBase<T, int, TContext>, IGenericService<T, TContext> where T : GenericEntity where TContext: DbContext
+    public class GenericServiceSimple<T, TContext> : GenericService<T, int, TContext>, IGenericService<T, TContext> where T : GenericEntity where TContext: DbContext
     {
-        public GenericService(TContext context):base(context){ }
+        public GenericServiceSimple(TContext context):base(context){ }
     }
 
-    public class GenericServiceBase<T, Tid, TContext> : IGenericService<T, Tid, TContext> where T: GenericEntity where TContext: DbContext
+    public class GenericService<T, Tid, TContext> : IGenericService<T, Tid, TContext> where T: GenericEntity where TContext: DbContext
     {
 
         protected readonly TContext _context;
         private DbSet<T> db;
 
-        public GenericServiceBase(TContext context)
+        public GenericService(TContext context)
         {
             _context = context;
             db = context.Set<T>();

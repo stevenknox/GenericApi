@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
-using Microsoft.Extensions.Options;
 
 //https://github.com/aspnet/Entropy/tree/42171b706540d23e0298c8f16a4b44a9ae805c0a/samples/Mvc.GenericControllers
 //https://docs.microsoft.com/en-us/aspnet/core/mvc/advanced/app-parts
@@ -19,15 +18,15 @@ namespace GenericApi
     {
         public static void AddGenericServices(this IServiceCollection services)
         {
-            services.AddScoped(typeof(IGenericService<,>), typeof(GenericService<,>));
-            services.AddScoped(typeof(IGenericService<,,>), typeof(GenericServiceBase<,,>));
+            services.AddScoped(typeof(IGenericService<,>), typeof(GenericServiceSimple<,>));
+            services.AddScoped(typeof(IGenericService<,,>), typeof(GenericService<,,>));
         }
 
     }
 
     public static class GenericControllersMiddleware
     {   
-        public static void AddGenericControllers(this IMvcBuilder builder, string assemblyName, Type db)
+        public static void AddGenericControllers(this IMvcBuilder builder, string assemblyName, Type db = null)
         {
             builder.ConfigureApplicationPartManager(p => p.FeatureProviders.Add(new GenericControllerFeatureProvider(assemblyName, db)));
         }
@@ -36,21 +35,10 @@ namespace GenericApi
 
     public class EntityTypes
     {
-        public static List<TypeInfo> GetTypesFromAssembly(string assemblyName) {
+        public static List<TypeInfo> GetTypesFromAssembly(Type type, string assemblyName)
+        {
+            List<Assembly> loadableAssemblies = Extensions.FindAssemblies(assemblyName);
 
-            var loadableAssemblies = new List<Assembly>();
-
-            var deps = DependencyContext.Default;
-            foreach (var compilationLibrary in deps.CompileLibraries)
-            {
-                if (compilationLibrary.Name.ToLower().Contains(assemblyName.ToLower()))
-                {
-                    var assembly = Assembly.Load(new AssemblyName(compilationLibrary.Name));
-                    loadableAssemblies.Add(assembly);
-                }
-            }
-
-            var type = typeof(IHasGenericService);
             var typeList = new List<TypeInfo>();
             var types = loadableAssemblies
                 .SelectMany(s => s.GetTypes())
@@ -60,8 +48,11 @@ namespace GenericApi
 
             return typeList;
         }
+
+        
     }
 
+  
     public class GenericControllerFeatureProvider : IApplicationFeatureProvider<ControllerFeature>
      {
         public string AssemblyName;
@@ -76,13 +67,19 @@ namespace GenericApi
         {
             // This is designed to run after the default ControllerTypeProvider, so the list of 'real' controllers
             // has already been populated.
-            foreach (var entityType in EntityTypes.GetTypesFromAssembly(AssemblyName))
+            if (db == null)
+                db = EntityTypes.GetTypesFromAssembly(typeof(DbContext), AssemblyName).FirstOrDefault().AsType();
+
+            foreach (var entityType in EntityTypes.GetTypesFromAssembly(typeof(IHasGenericService), AssemblyName))
             {
                 var typeName = entityType.Name + "Controller";
                 if (!feature.Controllers.Any(t => t.Name == typeName))
                 {
+
+                    var idType = entityType.GetPropertyType("Id");
+
                     // There's no 'real' controller for this entity, so add the generic version.
-                    var controllerType = typeof(GenericServiceController<,>).MakeGenericType(entityType.AsType(), db).GetTypeInfo();
+                    var controllerType = typeof(GenericServiceController<,,>).MakeGenericType(entityType.AsType(), idType, db).GetTypeInfo();
                     feature.Controllers.Add(controllerType);
                 }
             }
@@ -94,7 +91,7 @@ namespace GenericApi
     {
          public void Apply(ControllerModel controller)
         {
-            if (controller.ControllerType.GetGenericTypeDefinition() != typeof(GenericServiceController<,>))
+            if (controller.ControllerType.GetGenericTypeDefinition() != typeof(GenericServiceController<,,>))
             {
                 throw new Exception("Not a generic controller!");
             }
@@ -103,5 +100,7 @@ namespace GenericApi
             controller.ControllerName = entityType.Name;
         }
     }
+
+
 
 }

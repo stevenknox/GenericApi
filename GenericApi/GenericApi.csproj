@@ -3,13 +3,13 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <Authors>Steven Knox</Authors>
     <Company />
     <Description>Generic WebAPI, Service Layer and Repository for AspNetCore</Description>
     <PackageLicenseUrl>https://github.com/stevenknox/GenericApi/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/stevenknox/GenericApi</PackageProjectUrl>
-    <PackageReleaseNotes>Initial Working Release</PackageReleaseNotes>
+    <PackageReleaseNotes>Fix PUT issue</PackageReleaseNotes>
     <Copyright>Copyright Steven Knox 2017</Copyright>
   </PropertyGroup>
 

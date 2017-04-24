@@ -3,23 +3,23 @@
 namespace GenericApi
 {
     [GenericControllerNameConvention]
-    public class GenericServiceController<T, TContext> : ServiceController<T, TContext>
+    public class GenericServiceController<T, Tid, TContext> : ServiceController<T, Tid, TContext>
     {
-        public GenericServiceController(IGenericService<T, TContext> service) : base(service) { }
+        public GenericServiceController(IGenericService<T, Tid, TContext> service) : base(service) { }
     }
 
     [Produces("application/json")]
     [Route("api/[controller]")]
-    public class ServiceController<T, TContext> : Controller
+    public class ServiceController<T, Tid, TContext> : Controller
     {
-        private IGenericService<T, TContext> _service;
+        private IGenericService<T, Tid, TContext> _service;
 
-        public ServiceController(IGenericService<T, TContext> service)
+        public ServiceController(IGenericService<T, Tid, TContext> service)
         {
             _service = service;
         }
         [HttpGet("{id}")]
-        public IActionResult Find(int id)
+        public IActionResult Find(Tid id)
         {
             return Ok(_service.FindById(id));
         }
@@ -40,7 +40,7 @@ namespace GenericApi
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody]T input)
+        public IActionResult Put(Tid id, [FromBody]T input)
         {
            // var entity = _service.FindById(id);
 
@@ -50,7 +50,7 @@ namespace GenericApi
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(Tid id)
         {
             _service.Delete(id);
 
