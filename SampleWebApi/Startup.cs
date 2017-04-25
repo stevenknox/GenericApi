@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using SampleWebApi.Data;
+using System;
 
 namespace SampleWebApi
 {
@@ -29,10 +30,28 @@ namespace SampleWebApi
             // Add framework services.
             services.AddDbContext<StoreDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            //Use if EF Entities and DbContext in same assembly and only 1 DbContext exsits in that assembly
+            //services.
+            //    AddMvc().
+            //    AddGenericControllers(nameof(SampleWebApi));
+
+            //Use if EF Entities and DbContext in same assembly but more than 1 DbContext exsits in that assembly
+            //services.
+            //   AddMvc().
+            //   AddGenericControllers(nameof(SampleWebApi), typeof(StoreDbContext));
+
+            //Granular config allowing specific setup
             services.
-                AddMvc().
-                AddGenericControllers(nameof(SampleWebApi));
-            //nameof(SampleWebApi), typeof(StoreDbContext)
+               AddMvc().
+                 AddGenericControllers(new GenericControllerOptions
+                 {
+                     db = typeof(StoreDbContext),
+                     DbContextAssemblyName = nameof(SampleWebApi),
+                     EntityAssemblyName = nameof(SampleWebApi),
+                     UseViewModels = true,
+                     UseInputModels = true
+                 });
+
             services.AddGenericServices();
         }
 

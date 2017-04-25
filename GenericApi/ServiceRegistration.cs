@@ -28,8 +28,15 @@ namespace GenericApi
     {   
         public static void AddGenericControllers(this IMvcBuilder builder, string assemblyName, Type db = null)
         {
-            builder.ConfigureApplicationPartManager(p => p.FeatureProviders.Add(new GenericControllerFeatureProvider(assemblyName, db)));
+            var options = new GenericControllerOptions { db = db, EntityAssemblyName = assemblyName, UseInputModels = false, UseViewModels = false };
+            builder.ConfigureApplicationPartManager(p => p.FeatureProviders.Add(new GenericControllerFeatureProvider(options)));
         }
+
+        public static void AddGenericControllers(this IMvcBuilder builder, GenericControllerOptions options)
+        {
+            builder.ConfigureApplicationPartManager(p => p.FeatureProviders.Add(new GenericControllerFeatureProvider(options)));
+        }
+
 
     }
 
@@ -55,22 +62,20 @@ namespace GenericApi
   
     public class GenericControllerFeatureProvider : IApplicationFeatureProvider<ControllerFeature>
      {
-        public string AssemblyName;
-        public Type db;
-        public GenericControllerFeatureProvider(string assemblyName, Type context)
+        public GenericControllerOptions Options { get; set; }
+        public GenericControllerFeatureProvider(GenericControllerOptions options)
         {
-            db = context;
-            AssemblyName = assemblyName;
+            Options = options;
         }
 
         public void PopulateFeature(IEnumerable<ApplicationPart> parts, ControllerFeature feature)
         {
             // This is designed to run after the default ControllerTypeProvider, so the list of 'real' controllers
             // has already been populated.
-            if (db == null)
-                db = EntityTypes.GetTypesFromAssembly(typeof(DbContext), AssemblyName).FirstOrDefault().AsType();
+            if (Options.db == null)
+                Options.db = EntityTypes.GetTypesFromAssembly(typeof(DbContext), Options.GetDbAssembly()).FirstOrDefault().AsType();
 
-            foreach (var entityType in EntityTypes.GetTypesFromAssembly(typeof(IHasGenericService), AssemblyName))
+            foreach (var entityType in EntityTypes.GetTypesFromAssembly(typeof(IHasGenericService), Options.EntityAssemblyName))
             {
                 var typeName = entityType.Name + "Controller";
                 if (!feature.Controllers.Any(t => t.Name == typeName))
@@ -79,7 +84,9 @@ namespace GenericApi
                     var idType = entityType.GetPropertyType("Id");
 
                     // There's no 'real' controller for this entity, so add the generic version.
-                    var controllerType = typeof(GenericServiceController<,,>).MakeGenericType(entityType.AsType(), idType, db).GetTypeInfo();
+                    //here we scan for EntityViewModel and EntityInputModel and pass to our controller
+
+                    var controllerType = typeof(GenericServiceController<,,>).MakeGenericType(entityType.AsType(), idType, Options.db).GetTypeInfo();
                     feature.Controllers.Add(controllerType);
                 }
             }

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>0.3.0</Version>
+    <Version>0.4.0</Version>
     <Authors>Steven Knox</Authors>
     <Company />
     <Description>Generic WebAPI, Service Layer and Repository for AspNetCore</Description>
