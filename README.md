@@ -1,4 +1,4 @@
-[![NuGet](https://img.shields.io/nuget/v/Nuget.Core.svg)](https://www.nuget.org/packages/GenericApi/0.2.0)  [![Twitter Follow](https://img.shields.io/twitter/follow/espadrine.svg?style=social&label=Follow)](https://twitter.com/stevenknox101)
+[![NuGet](https://img.shields.io/nuget/v/Nuget.Core.svg)](https://www.nuget.org/packages/GenericApi)  [![Twitter Follow](https://img.shields.io/twitter/follow/espadrine.svg?style=social&label=Follow)](https://twitter.com/stevenknox101)
 
 # Generic WebAPI, Service Layer and Repository for AspNetCore
 
@@ -15,7 +15,7 @@ Under ConfigureServices within the Startup.cs you can enable the generic service
 
      services.AddGenericServices();
 
-In the same startup mthod you can register dynamic WebApi controllers by adding the following method to AddMvc(). Replace *SampleWebApi* with the name of the Assembly containing your EF Entities.
+In the same startup method you can register dynamic WebApi controllers by adding the following method to AddMvc(). Replace *SampleWebApi* with the name of the Assembly containing your EF Entities.
 
     services.AddMvc().AddGenericControllers(nameof(StoreWebApi));
 
