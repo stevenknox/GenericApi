@@ -28,11 +28,11 @@ namespace GenericApi
     {   
         public static void AddGenericControllers(this IMvcBuilder builder, string assemblyName, Type db = null)
         {
-            var options = new GenericControllerOptions { db = db, EntityAssemblyName = assemblyName, UseInputModels = false, UseViewModels = false };
+            var options = new Options { db = db, EntityAssemblyName = assemblyName };
             builder.ConfigureApplicationPartManager(p => p.FeatureProviders.Add(new GenericControllerFeatureProvider(options)));
         }
 
-        public static void AddGenericControllers(this IMvcBuilder builder, GenericControllerOptions options)
+        public static void AddGenericControllers(this IMvcBuilder builder, Options options)
         {
             builder.ConfigureApplicationPartManager(p => p.FeatureProviders.Add(new GenericControllerFeatureProvider(options)));
         }
@@ -69,8 +69,8 @@ namespace GenericApi
   
     public class GenericControllerFeatureProvider : IApplicationFeatureProvider<ControllerFeature>
      {
-        public GenericControllerOptions Options { get; set; }
-        public GenericControllerFeatureProvider(GenericControllerOptions options)
+        public Options Options { get; set; }
+        public GenericControllerFeatureProvider(Options options)
         {
             Options = options;
         }
@@ -79,6 +79,9 @@ namespace GenericApi
         {
             // This is designed to run after the default ControllerTypeProvider, so the list of 'real' controllers
             // has already been populated.
+            bool EnableModelMapping = Options.HasProperty("UseViewModels") && Options.HasProperty("UseInputModels");
+            bool EnableDTOMapping = Options.HasProperty("UseDTOs");
+
             if (Options.db == null)
                 Options.db = EntityTypes.GetTypesFromAssembly(typeof(DbContext), Options.GetDbAssembly()).FirstOrDefault().AsType();
 
@@ -90,13 +93,46 @@ namespace GenericApi
 
                     var idType = entityType.GetPropertyType("Id");
 
-                    // There's no 'real' controller for this entity, so add the generic version.
-                    //here we scan for EntityViewModel and EntityInputModel and pass to our controller
-                    var vm = EntityTypes.GetTypeFromAssembly(entityType.FullName + "ViewModel", Options.EntityAssemblyName);
-                    var im = EntityTypes.GetTypeFromAssembly(entityType.FullName + "InputModel", Options.EntityAssemblyName);
 
-                    var controllerType = typeof(GenericServiceController<,,>).MakeGenericType(entityType.AsType(), idType, Options.db).GetTypeInfo();
-                    feature.Controllers.Add(controllerType);
+                    //here we scan for EntityViewModel and EntityInputModel and pass to our controller
+
+
+                    Type vm = null;
+                    Type im = null;
+
+                    //if Extensions package is loaded we should have extra properties
+                    if (EnableModelMapping)
+                    {
+                        if (Convert.ToBoolean(Options.GetPropertyValue("UseViewModels")))
+                            vm = EntityTypes.GetTypeFromAssembly(entityType.FullName + "ViewModel", Options.EntityAssemblyName);
+
+                        if (Convert.ToBoolean(Options.GetPropertyValue("UseInputModels")))
+                            im = EntityTypes.GetTypeFromAssembly(entityType.FullName + "InputModel", Options.EntityAssemblyName);
+                    }
+                    else if (EnableDTOMapping)
+                    {
+                        vm = EntityTypes.GetTypeFromAssembly(entityType.FullName + "DTO", Options.EntityAssemblyName);
+                        im = vm;
+                    }
+
+
+                    if (vm == null) vm = entityType.AsType();
+                    if (im == null) im = entityType.AsType();
+
+                    // There's no 'real' controller for this entity, so add the generic version.
+
+                    if (EnableModelMapping || EnableDTOMapping)
+                    {
+                        var dtoController = EntityTypes.GetTypeFromAssembly("GenericApi.DTOController`5", "GenericApi.ModelExtensions");
+                        var controllerType = dtoController.MakeGenericType(entityType.AsType(), im, vm, idType, Options.db).GetTypeInfo();
+                        feature.Controllers.Add(controllerType);
+                    }
+                    else
+                    {
+                        var controllerType = typeof(GenericController<,,>).MakeGenericType(entityType.AsType(), im, vm, idType, Options.db).GetTypeInfo();
+                        feature.Controllers.Add(controllerType);
+                    }
+                    
                 }
             }
         }
@@ -107,7 +143,7 @@ namespace GenericApi
     {
          public void Apply(ControllerModel controller)
         {
-            if (controller.ControllerType.GetGenericTypeDefinition() != typeof(GenericServiceController<,,>))
+            if (controller.ControllerType.GetGenericTypeDefinition() != typeof(GenericController<,,>))
             {
                 throw new Exception("Not a generic controller!");
             }

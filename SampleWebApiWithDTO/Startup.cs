@@ -1,14 +1,14 @@
-﻿using GenericApi;
+﻿using AutoMapper;
+using GenericApi;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.EntityFrameworkCore;
-using SampleWebApi.Data;
-using System;
+using SampleWebApiWithDTO.Data;
 
-namespace SampleWebApi
+namespace SampleWebApiWithDTO
 {
     public class Startup
     {
@@ -30,19 +30,21 @@ namespace SampleWebApi
             // Add framework services.
             services.AddDbContext<StoreDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            //Use if EF Entities and DbContext in same assembly and only 1 DbContext exsits in that assembly
-            //services.
-            //    AddMvc().
-            //    AddGenericControllers(nameof(SampleWebApi));
+            services.
+               AddMvc().
+                 AddGenericControllers(new OptionsBuilder
+                 {
+                     db = typeof(StoreDbContext),
+                     DbContextAssemblyName = nameof(SampleWebApiWithDTO),
+                     EntityAssemblyName = nameof(SampleWebApiWithDTO),
+                     UseInputModels = true,
+                     UseViewModels = true,
 
-            //Use if EF Entities and DbContext in same assembly but more than 1 DbContext exsits in that assembly
-            //services.
-            //   AddMvc().
-            //   AddGenericControllers(nameof(SampleWebApi), typeof(StoreDbContext));
-
-            //Granular config allowing specific setup
+                 });
 
             services.AddGenericServices();
+
+            services.AddAutoMapper(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,6 +74,5 @@ namespace SampleWebApi
 
             DataSeeder.Initialize(context);
         }
-
     }
 }

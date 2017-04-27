@@ -63,7 +63,7 @@ namespace GenericApi.Tests
             using (var context = new SampleContext(options))
             {
                 var service = new GenericServiceSimple<SampleEntity, SampleContext>(context);
-                var controller = new GenericServiceController<SampleEntity, int, SampleContext>(service);
+                var controller = new GenericController<SampleEntity, int, SampleContext>(service);
 
                 var response = controller.Get() as OkObjectResult;
                 sut = response.Value as List<SampleEntity>;
@@ -83,7 +83,7 @@ namespace GenericApi.Tests
             using (var context = new SampleContext(options))
             {
                 var service = new GenericServiceSimple<SampleEntity, SampleContext>(context);
-                var controller = new GenericServiceController<SampleEntity, int, SampleContext>(service);
+                var controller = new GenericController<SampleEntity, int, SampleContext>(service);
 
                 var response = controller.Find(entity.Id.ToString()) as OkObjectResult;
                 sut = response.Value as SampleEntity;
@@ -102,7 +102,7 @@ namespace GenericApi.Tests
             using (var context = new SampleContext(options))
             {
                 var service = new GenericServiceSimple<SampleEntity, SampleContext>(context);
-                var controller = new GenericServiceController<SampleEntity, int, SampleContext>(service);
+                var controller = new GenericController<SampleEntity, int, SampleContext>(service);
 
                 controller.Post(new SampleEntity { Name = data });
             }
@@ -123,7 +123,7 @@ namespace GenericApi.Tests
             using (var context = new SampleContext(options))
             {
                 var service = new GenericServiceSimple<SampleEntity, SampleContext>(context);
-                var controller = new GenericServiceController<SampleEntity, int, SampleContext>(service);
+                var controller = new GenericController<SampleEntity, int, SampleContext>(service);
 
                 //make our changes
                 sut.Name = updatedData;
@@ -146,9 +146,9 @@ namespace GenericApi.Tests
             using (var context = new SampleContext(options))
             {
                 var service = new GenericServiceSimple<SampleEntity, SampleContext>(context);
-                var controller = new GenericServiceController<SampleEntity, int, SampleContext>(service);
+                var controller = new GenericController<SampleEntity, int, SampleContext>(service);
 
-                controller.Delete(sut.Id);
+                controller.Delete(sut.Id.ToString());
             }
 
             using (var context = new SampleContext(options))
@@ -167,7 +167,7 @@ namespace GenericApi.Tests
             using (var context = new SampleContext(options))
             {
                 var service = new GenericService<SampleEntityWithGuid, Guid, SampleContext>(context);
-                var controller = new GenericServiceController<SampleEntityWithGuid, Guid, SampleContext>(service);
+                var controller = new GenericController<SampleEntityWithGuid, Guid, SampleContext>(service);
 
                 //make our changes
                 sut.Name = updatedData;
@@ -191,7 +191,7 @@ namespace GenericApi.Tests
             using (var context = new SampleContext(options))
             {
                 var service = new GenericService<SampleEntityWithGuid, Guid, SampleContext>(context);
-                var controller = new GenericServiceController<SampleEntityWithGuid, Guid, SampleContext>(service);
+                var controller = new GenericController<SampleEntityWithGuid, Guid, SampleContext>(service);
 
                 var response = controller.Find(entity.Id.ToString()) as OkObjectResult;
                 sut = response.Value as SampleEntityWithGuid;

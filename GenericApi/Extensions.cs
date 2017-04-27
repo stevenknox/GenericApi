@@ -31,6 +31,30 @@ namespace GenericApi
             return assembly.GetTypes().Where(t => baseType.IsAssignableFrom(t));
         }
 
+        public static object ConvertTo(this string id, Type targetType)
+        {
+            if (targetType == typeof(Guid))
+            {
+                return new Guid(id);
+            }
+            else
+            {
+                return Convert.ChangeType(id, targetType);
+            }
+
+        }
+
+
+        public static bool HasProperty(this object obj, string propertyName)
+        {
+            return obj.GetType().GetProperty(propertyName) != null;
+        }
+
+        public static object GetPropertyValue(this object obj, string propertyName)
+        {
+            return obj.GetType().GetProperty(propertyName).GetValue(obj, null);
+        }
+
         public static Type GetPropertyType(this TypeInfo obj, String name)
         {
                 if (obj == null) { return null; }

@@ -8,7 +8,7 @@ namespace GenericApi
     {
         T Add(T entity);
         T AddOrUpdate(T entity);
-        void Delete(Tid id);
+        void Delete(dynamic id);
         T FindById(dynamic id, params Expression<Func<T, object>>[] includeProperties);
         List<T> GetAll(params Expression<Func<T, object>>[] includeProperties);
         List<T> Query(Func<T, bool> predicate, params Expression<Func<T, object>>[] includeProperties);

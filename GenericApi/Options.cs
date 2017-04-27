@@ -2,13 +2,11 @@
 
 namespace GenericApi
 {
-    public class GenericControllerOptions
+    public class Options
     {
         public string EntityAssemblyName { get; set; }
         public string DbContextAssemblyName { get; set; }
         public Type db { get; set; }
-        public bool UseViewModels { get; set; }
-        public bool UseInputModels { get; set; }
 
         public string GetDbAssembly()
         {
@@ -18,4 +16,5 @@ namespace GenericApi
             return EntityAssemblyName;
         }
     }
+
 }

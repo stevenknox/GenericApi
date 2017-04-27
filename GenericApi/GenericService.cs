@@ -81,7 +81,7 @@ namespace GenericApi
             }
         }
 
-        public void Delete(Tid id)
+        public void Delete(dynamic id)
         {
             var entity = db.Find(id);
             if (entity != null)
