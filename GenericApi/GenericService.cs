@@ -28,7 +28,7 @@ namespace GenericApi
            return AllIncluding(includeProperties).ToList();
         }
 
-        public T FindById(Tid id, params Expression<Func<T, object>>[] includeProperties)
+        public T FindById(dynamic id, params Expression<Func<T, object>>[] includeProperties)
         {
             var query = db.Find(id);
 

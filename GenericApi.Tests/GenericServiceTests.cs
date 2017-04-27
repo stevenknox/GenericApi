@@ -73,6 +73,27 @@ namespace GenericApi.Tests
 
         }
 
+        [Fact]
+        public void GenericController_Should_GetSingleEntity()
+        {
+            ResetData();
+            var entity = SeedData(nameof(GenericController_Should_GetSingleEntity)).First();
+            SampleEntity sut;
+
+            using (var context = new SampleContext(options))
+            {
+                var service = new GenericServiceSimple<SampleEntity, SampleContext>(context);
+                var controller = new GenericServiceController<SampleEntity, int, SampleContext>(service);
+
+                var response = controller.Find(entity.Id.ToString()) as OkObjectResult;
+                sut = response.Value as SampleEntity;
+            }
+
+            Assert.Equal(entity.Id, sut.Id);
+            Assert.Equal(entity.Name, sut.Name);
+
+        }
+
 
         [Fact]
         public void GenericController_Should_CreateEntity()
@@ -160,6 +181,27 @@ namespace GenericApi.Tests
             }
         }
 
+        [Fact]
+        public void GenericController_Should_GetSingleEntityWithGuid()
+        {
+            ResetData();
+            var entity = SeedDataWithGuids(nameof(GenericController_Should_GetSingleEntityWithGuid)).First();
+            SampleEntityWithGuid sut;
+
+            using (var context = new SampleContext(options))
+            {
+                var service = new GenericService<SampleEntityWithGuid, Guid, SampleContext>(context);
+                var controller = new GenericServiceController<SampleEntityWithGuid, Guid, SampleContext>(service);
+
+                var response = controller.Find(entity.Id.ToString()) as OkObjectResult;
+                sut = response.Value as SampleEntityWithGuid;
+            }
+
+            Assert.Equal(entity.Id, sut.Id);
+            Assert.Equal(entity.Name, sut.Name);
+
+        }
+
         private static SampleEntity SaveEntity(DbContextOptions<SampleContext> options, SampleEntity data)
         {
             using (var context = new SampleContext(options))
@@ -193,11 +235,22 @@ namespace GenericApi.Tests
             return entities;
         }
 
+        private List<SampleEntityWithGuid> SeedDataWithGuids(string name)
+        {
+            var entities = new List<SampleEntityWithGuid>();
+            for (int i = 0; i < 10; i++)
+            {
+                entities.Add(SaveGuidEntity(options, new SampleEntityWithGuid { Name = $"Entity {i} {name}" }));
+            }
+            return entities;
+        }
+
         private void ResetData()
         {
             using (var context = new SampleContext(options))
             {
                 context.SampleEntities.RemoveRange(context.SampleEntities);
+                context.SampleEntitiesWithGuid.RemoveRange(context.SampleEntitiesWithGuid);
                 context.SaveChanges();
             }
         }

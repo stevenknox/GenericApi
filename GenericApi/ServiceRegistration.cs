@@ -56,7 +56,14 @@ namespace GenericApi
             return typeList;
         }
 
-        
+        public static Type GetTypeFromAssembly(string type, string assemblyName)
+        {
+            Assembly assembly = Extensions.FindAssemblies(assemblyName).First();
+
+            return assembly.GetType(type);
+        }
+
+
     }
 
   
@@ -85,6 +92,8 @@ namespace GenericApi
 
                     // There's no 'real' controller for this entity, so add the generic version.
                     //here we scan for EntityViewModel and EntityInputModel and pass to our controller
+                    var vm = EntityTypes.GetTypeFromAssembly(entityType.FullName + "ViewModel", Options.EntityAssemblyName);
+                    var im = EntityTypes.GetTypeFromAssembly(entityType.FullName + "InputModel", Options.EntityAssemblyName);
 
                     var controllerType = typeof(GenericServiceController<,,>).MakeGenericType(entityType.AsType(), idType, Options.db).GetTypeInfo();
                     feature.Controllers.Add(controllerType);

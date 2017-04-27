@@ -1,7 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Reflection;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GenericApi
 {
+    public interface ServiceBuilder<T, Tid, TContext>
+    {
+        T Entity { get; set; }
+        Tid Id { get; set; }
+        TContext DbContext { get; set; }
+    }
+
     [GenericControllerNameConvention]
     public class GenericServiceController<T, Tid, TContext> : ServiceController<T, Tid, TContext>
     {
@@ -10,7 +19,7 @@ namespace GenericApi
 
     [Produces("application/json")]
     [Route("api/[controller]")]
-    public class ServiceController<T, Tid, TContext> : Controller
+    public class ServiceController<T, Tid, TContext> : Controller 
     {
         private IGenericService<T, Tid, TContext> _service;
 
@@ -19,9 +28,27 @@ namespace GenericApi
             _service = service;
         }
         [HttpGet("{id}")]
-        public IActionResult Find(Tid id)
+        public IActionResult Find(string id)
         {
-            return Ok(_service.FindById(id));
+            //MVC doesnt like having Tid as the param type so we must type as string and cast
+            var targetType = typeof(T).GetProperty("Id").PropertyType;
+
+            var _id = TypeConveter(id, targetType);
+
+            return Ok(_service.FindById(_id));
+        }
+
+        private static object TypeConveter(string id, Type targetType)
+        {
+            if (targetType == typeof(Guid))
+            {
+                return new Guid(id);
+            }
+            else
+            {
+                return Convert.ChangeType(id, targetType);
+            }
+            
         }
 
         [HttpGet]
