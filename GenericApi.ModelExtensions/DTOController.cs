@@ -16,10 +16,12 @@ namespace GenericApi
     {
         private IGenericService<T, Tid, TContext> _service;
 
-        public DTOController(IGenericService<T, Tid, TContext> service) : base(service) { }
+        public DTOController(IGenericService<T, Tid, TContext> service) : base(service) {
+            _service = service;
+        }
 
         [HttpGet("{id}")]
-        public new IActionResult Find(string id)
+        public override IActionResult Find(string id)
         {
             object _id = GetIdFromParameter(id);
 
@@ -29,7 +31,7 @@ namespace GenericApi
         }
 
         [HttpGet]
-        public new IActionResult Get()
+        public override IActionResult Get()
         {
             var data = _service.GetAll().AsViewModel<TViewModel, T>();
 
@@ -37,7 +39,7 @@ namespace GenericApi
         }
 
         [HttpPost]
-        public new IActionResult Post([FromBody]object input)
+        public override IActionResult Post([FromBody]object input)
         {
             var result = _service.Add((T)input);
 
@@ -46,7 +48,7 @@ namespace GenericApi
         }
 
         [HttpPut("{id}")]
-        public new IActionResult Put(Tid id, [FromBody]object input)
+        public override IActionResult Put(Tid id, [FromBody]object input)
         {
            // var entity = _service.FindById(id);
 

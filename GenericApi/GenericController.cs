@@ -21,7 +21,7 @@ namespace GenericApi
             _service = service;
         }
         [HttpGet("{id}")]
-        public IActionResult Find(string id)
+        public virtual IActionResult Find(string id)
         {
             object _id = GetIdFromParameter(id);
 
@@ -29,13 +29,13 @@ namespace GenericApi
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public virtual IActionResult Get()
         {
             return Ok(_service.GetAll());
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody]object input)
+        public virtual IActionResult Post([FromBody]object input)
         {
             var result = _service.Add((T)input);
 
@@ -44,7 +44,7 @@ namespace GenericApi
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(Tid id, [FromBody]object input)
+        public virtual IActionResult Put(Tid id, [FromBody]object input)
         {
            // var entity = _service.FindById(id);
 
@@ -54,7 +54,7 @@ namespace GenericApi
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(string id)
+        public virtual IActionResult Delete(string id)
         {
             object _id = GetIdFromParameter(id);
 

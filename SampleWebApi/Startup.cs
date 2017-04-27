@@ -31,9 +31,9 @@ namespace SampleWebApi
             services.AddDbContext<StoreDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             //Use if EF Entities and DbContext in same assembly and only 1 DbContext exsits in that assembly
-            //services.
-            //    AddMvc().
-            //    AddGenericControllers(nameof(SampleWebApi));
+            services.
+                AddMvc().
+                AddGenericControllers(nameof(SampleWebApi));
 
             //Use if EF Entities and DbContext in same assembly but more than 1 DbContext exsits in that assembly
             //services.

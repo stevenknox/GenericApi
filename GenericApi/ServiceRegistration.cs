@@ -129,7 +129,7 @@ namespace GenericApi
                     }
                     else
                     {
-                        var controllerType = typeof(GenericController<,,>).MakeGenericType(entityType.AsType(), im, vm, idType, Options.db).GetTypeInfo();
+                        var controllerType = typeof(GenericController<,,>).MakeGenericType(entityType.AsType(), idType, Options.db).GetTypeInfo();
                         feature.Controllers.Add(controllerType);
                     }
                     
@@ -143,7 +143,8 @@ namespace GenericApi
     {
          public void Apply(ControllerModel controller)
         {
-            if (controller.ControllerType.GetGenericTypeDefinition() != typeof(GenericController<,,>))
+            var x = controller.ControllerType.GetGenericTypeDefinition();
+            if (x != typeof(GenericController<,,>) && ! x.Name.Contains("DTOController`5"))
             {
                 throw new Exception("Not a generic controller!");
             }
