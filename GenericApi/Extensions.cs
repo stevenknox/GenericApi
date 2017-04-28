@@ -4,11 +4,37 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyModel;
+using System.Linq.Expressions;
+using Newtonsoft.Json.Linq;
 
 namespace GenericApi
 {
     public static class Extensions
     {
+        public static bool IsPrimitive(this PropertyInfo info)
+        {
+            return info.GetType().GetTypeInfo().IsPrimitive;
+        }
+
+        public static JObject ToJObject(this object obj)
+        {
+            return obj as JObject;
+        }
+
+        public static Expression<Func<T, object>> MapIncludes<T>(this string property)
+        {
+            var param = Expression.Parameter(typeof(T), "p");
+
+            Expression parent = Expression.Property(param, property);
+
+            if (!parent.Type.GetTypeInfo().IsValueType)
+            {
+                return Expression.Lambda<Func<T, object>>(parent, param);
+            }
+            var convert = Expression.Convert(parent, typeof(object));
+            return Expression.Lambda<Func<T, object>>(convert, param);
+        }
+
         public static List<Assembly> FindAssemblies(string assemblyName)
         {
             var loadableAssemblies = new List<Assembly>();

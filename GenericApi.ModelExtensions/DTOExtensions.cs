@@ -14,7 +14,7 @@ namespace GenericApi
         {
             return Mapper.Map<DTO, Model>(dto);
         }
-
+        
         public static Model AsModel<DTO, Model>(this DTO dto, Model model)
         {
             return Mapper.Map<DTO, Model>(dto, model);

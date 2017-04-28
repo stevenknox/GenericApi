@@ -14,15 +14,27 @@ namespace SampleWebApiWithDTO.Data
                 return;   // DB has been seeded
             }
 
-            var entities = new Product[]
+            var products = new Product[]
             {
-                new Product{Name="Apples"},
-                new Product{Name="Oranges"},
-                new Product{Name="Grapes"}
+                new Product{Name="Apples", Cost=10},
+                new Product{Name="Oranges", Cost=5},
+                new Product{Name="Grapes", Cost=15}
             };
-            foreach (Product s in entities)
+            foreach (Product s in products)
             {
                 context.Products.Add(s);
+            }
+            context.SaveChanges();
+
+            var orders = new Order[]
+          {
+                new Order{ProductId = 1, Quantity = 2, Total = 20 },
+                new Order{ProductId = 2, Quantity = 1, Total = 5 },
+                new Order{ProductId = 3, Quantity = 4, Total = 60 },
+          };
+            foreach (Order s in orders)
+            {
+                context.Orders.Add(s);
             }
             context.SaveChanges();
 

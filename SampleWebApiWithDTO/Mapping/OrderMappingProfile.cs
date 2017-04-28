@@ -6,8 +6,8 @@ namespace SampleWebApiWithDTO.Mapping
     {
         public OrderMappingProfile()
         {
-
             CreateMap<Order, OrderViewModel>();
+            CreateMap<OrderInputModel, Order>();
         }
     }
 }

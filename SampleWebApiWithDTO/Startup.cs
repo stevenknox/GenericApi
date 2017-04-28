@@ -39,7 +39,6 @@ namespace SampleWebApiWithDTO
                      EntityAssemblyName = nameof(SampleWebApiWithDTO),
                      UseInputModels = true,
                      UseViewModels = true,
-
                  });
 
             services.AddGenericServices();

@@ -40,8 +40,6 @@ namespace SampleWebApi
             //   AddMvc().
             //   AddGenericControllers(nameof(SampleWebApi), typeof(StoreDbContext));
 
-            //Granular config allowing specific setup
-
             services.AddGenericServices();
         }
 

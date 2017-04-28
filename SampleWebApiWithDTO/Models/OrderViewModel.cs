@@ -1,9 +1,12 @@
-﻿namespace SampleWebApiWithDTO.Models
+﻿using GenericApi;
+
+namespace SampleWebApiWithDTO.Models
 {
     public class OrderViewModel
     {
         public int Id { get; set; }
-        public int ProductId { get; set; }
+        [MapToEntity(typeof(Product))]
+        public string ProductName { get; set; }
         public int Quantity { get; set; }
     }
 }

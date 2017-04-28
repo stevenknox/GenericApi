@@ -1,5 +1,11 @@
 ﻿using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System;
+using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace GenericApi
 {
@@ -25,15 +31,20 @@ namespace GenericApi
         {
             object _id = GetIdFromParameter(id);
 
-            var obj = _service.FindById(_id).AsViewModel<TViewModel, T>();
+            Expression<Func<T, object>> includes = GetIncludesForViewModel();
 
-            return Ok();
+            var obj = _service.FindById(_id, includes).AsViewModel<TViewModel, T>();
+
+            return Ok(obj);
         }
+
 
         [HttpGet]
         public override IActionResult Get()
         {
-            var data = _service.GetAll().AsViewModel<TViewModel, T>();
+            Expression<Func<T, object>> includes = GetIncludesForViewModel();
+
+            var data = _service.GetAll(includes).AsViewModel<TViewModel, T>();
 
             return Ok(data);
         }
@@ -41,20 +52,40 @@ namespace GenericApi
         [HttpPost]
         public override IActionResult Post([FromBody]object input)
         {
-            var result = _service.Add((T)input);
+            
+            var model = input.ToJObject()
+                .ToObject<TInputModel>()
+                .AsModel<TInputModel, T>();
+
+            var result = _service.Add(model);
 
             return Ok(result);
 
         }
 
         [HttpPut("{id}")]
-        public override IActionResult Put(Tid id, [FromBody]object input)
+        public override IActionResult Put(string id, [FromBody]object input)
         {
-           // var entity = _service.FindById(id);
+            object _id = GetIdFromParameter(id);
 
-            var result = _service.Update((T)input);
+            var entity = _service.FindById(_id);
+
+            var updatedModel = input.ToJObject()
+               .ToObject<TInputModel>()
+               .AsModel(entity);
+
+            var result = _service.Update(updatedModel);
 
             return Ok(result);
+        }
+
+        
+        private static Expression<Func<T, object>> GetIncludesForViewModel()
+        {
+            var references = Helpers.GetMapToEntityAttributes<TViewModel>().ToList();
+
+            var includes = references.First().Name.MapIncludes<T>();
+            return includes;
         }
 
     }

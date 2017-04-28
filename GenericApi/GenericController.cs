@@ -44,9 +44,9 @@ namespace GenericApi
         }
 
         [HttpPut("{id}")]
-        public virtual IActionResult Put(Tid id, [FromBody]object input)
+        public virtual IActionResult Put(string id, [FromBody]object input)
         {
-           // var entity = _service.FindById(id);
+            object _id = GetIdFromParameter(id);
 
             var result = _service.Update((T)input);
 
