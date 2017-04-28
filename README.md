@@ -37,7 +37,7 @@ A complete ConfigureServices method that includes adding an Entity Framework DbC
 
     .AddGenericControllers(nameof(StoreWebApi), typeof(StoreDbContext));
 
-To able dynamic API and Service generation for your Entity Framework entities ensure it inherits from the *GenericEntity* base class and has a primary key called *Id* . The Id can be any primative type.
+To enable dynamic API and Service generation for your Entity Framework entities ensure it inherits from the *GenericEntity* base class and has a primary key called *Id* . The Id can be any primative type.
 
     public class Product: GenericEntity
     {
