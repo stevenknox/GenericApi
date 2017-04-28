@@ -30,19 +30,17 @@ namespace GenericApi
         public override IActionResult Find(string id)
         {
             object _id = GetIdFromParameter(id);
-
-            Expression<Func<T, object>> includes = GetIncludesForViewModel();
+            var includes = GetIncludesForViewModel();
 
             var obj = _service.FindById(_id, includes).AsViewModel<TViewModel, T>();
 
             return Ok(obj);
         }
 
-
         [HttpGet]
         public override IActionResult Get()
         {
-            Expression<Func<T, object>> includes = GetIncludesForViewModel();
+            var includes = GetIncludesForViewModel();
 
             var data = _service.GetAll(includes).AsViewModel<TViewModel, T>();
 
@@ -82,10 +80,14 @@ namespace GenericApi
         
         private static Expression<Func<T, object>> GetIncludesForViewModel()
         {
-            var references = Helpers.GetMapToEntityAttributes<TViewModel>().ToList();
-
-            var includes = references.First().Name.MapIncludes<T>();
-            return includes;
+            var references = Helpers.MappedProperties<TViewModel>().ToList();
+            
+            if (references.Count() > 0)
+            {
+                var includes = references.First().Entity != null ? references.First().Entity.MapIncludes<T>() : references.First().EntityName.MapIncludes<T>();
+                return includes;
+            }
+            return null;
         }
 
     }

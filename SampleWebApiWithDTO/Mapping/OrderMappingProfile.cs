@@ -1,8 +1,9 @@
 ﻿using SampleWebApiWithDTO.Models;
+using AutoMapper;
 
 namespace SampleWebApiWithDTO.Mapping
 {
-    public class OrderMappingProfile : AutoMapper.Profile
+    public class OrderMappingProfile : Profile
     {
         public OrderMappingProfile()
         {

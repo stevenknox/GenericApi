@@ -8,21 +8,28 @@ namespace GenericApi
 {
     public static class Helpers
     {
-        public static List<Type> GetMapToEntityAttributes<T>()
+        public static IEnumerable<MapToEntityAttribute> MappedProperties<T>()
         {
-            var attrs = new List<Type>();
+            return FindPropsWithMapToEntityAttribute<T>();
+
+        }
+
+        private static List<MapToEntityAttribute> FindPropsWithMapToEntityAttribute<T>()
+        {
+            var attrs = new List<MapToEntityAttribute>();
 
             var props = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
             foreach (var prop in props)
             {
                 var att = prop.GetCustomAttributes(typeof(MapToEntityAttribute), false);
-                if(att.Count() > 0)
-                    attrs.Add((att.First() as MapToEntityAttribute).Name);
+                if (att.Count() > 0)
+                    attrs.Add((att.First() as MapToEntityAttribute));
             }
-                  
+
             return attrs;
 
         }
+
     }
 }

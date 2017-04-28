@@ -21,11 +21,41 @@ namespace GenericApi
             return obj as JObject;
         }
 
+        public static Expression<Func<T, object>[]> MapIncludes<T>(this List<string> props)
+        {
+            var param = Expression.Parameter(typeof(T), "p");
+            var x = new List<Expression>();
+            foreach (var prop in props)
+            {
+                Expression expression = Expression.Property(param, prop);
+                x.Add(expression);
+
+            }
+            NewArrayExpression parent = Expression.NewArrayInit(typeof(T), x);
+            var convert = Expression.Convert(parent, typeof(object[]));
+            return Expression.Lambda<Func<T, object>[]>(convert, param);
+
+        }
+
         public static Expression<Func<T, object>> MapIncludes<T>(this string property)
         {
             var param = Expression.Parameter(typeof(T), "p");
 
             Expression parent = Expression.Property(param, property);
+
+            if (!parent.Type.GetTypeInfo().IsValueType)
+            {
+                return Expression.Lambda<Func<T, object>>(parent, param);
+            }
+            var convert = Expression.Convert(parent, typeof(object));
+            return Expression.Lambda<Func<T, object>>(convert, param);
+        }
+
+        public static Expression<Func<T, object>> MapIncludes<T>(this Type property)
+        {
+            var param = Expression.Parameter(typeof(T), "p");
+
+            Expression parent = Expression.Property(param, property.Name);
 
             if (!parent.Type.GetTypeInfo().IsValueType)
             {
@@ -69,7 +99,6 @@ namespace GenericApi
             }
 
         }
-
 
         public static bool HasProperty(this object obj, string propertyName)
         {

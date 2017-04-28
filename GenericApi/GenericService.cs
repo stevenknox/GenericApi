@@ -28,7 +28,24 @@ namespace GenericApi
            return AllIncluding(includeProperties).ToList();
         }
 
+        public List<T> GetAll(string[] includeProperties)
+        {
+            return AllIncluding(includeProperties).ToList();
+        }
+
         public T FindById(dynamic id, params Expression<Func<T, object>>[] includeProperties)
+        {
+            var query = db.Find(id);
+
+            foreach (var includeProperty in includeProperties)
+            {
+                _context.Entry(query).Reference(includeProperty).Load();
+            }
+
+            return query;
+        }
+
+        public T FindById(dynamic id, string[] includeProperties)
         {
             var query = db.Find(id);
 
@@ -45,7 +62,22 @@ namespace GenericApi
             return AllIncluding(includeProperties).Where(predicate).ToList();
         }
 
+        public List<T> Query(Func<T, bool> predicate, string[] includeProperties)
+        {
+            return AllIncluding(includeProperties).Where(predicate).ToList();
+        }
+
         private IQueryable<T> AllIncluding(params Expression<Func<T, object>>[] includeProperties)
+        {
+            IQueryable<T> query = _context.Set<T>();
+            foreach (var includeProperty in includeProperties)
+            {
+                query = query.Include(includeProperty);
+            }
+            return query;
+        }
+
+        private IQueryable<T> AllIncluding(string[] includeProperties)
         {
             IQueryable<T> query = _context.Set<T>();
             foreach (var includeProperty in includeProperties)

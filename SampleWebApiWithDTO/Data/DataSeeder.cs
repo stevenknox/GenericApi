@@ -14,11 +14,22 @@ namespace SampleWebApiWithDTO.Data
                 return;   // DB has been seeded
             }
 
+            var types = new ProductType[]
+            {
+                new ProductType { Name = "Food"  }
+            };
+
+            foreach (ProductType s in types)
+            {
+                context.ProductTypes.Add(s);
+            }
+            context.SaveChanges();
+
             var products = new Product[]
             {
-                new Product{Name="Apples", Cost=10},
-                new Product{Name="Oranges", Cost=5},
-                new Product{Name="Grapes", Cost=15}
+                new Product{Name="Apples", Cost=10, ProductTypeId=1},
+                new Product{Name="Oranges", Cost=5, ProductTypeId=1},
+                new Product{Name="Grapes", Cost=15, ProductTypeId=1}
             };
             foreach (Product s in products)
             {
