@@ -128,7 +128,7 @@ namespace GenericApi.Tests
                 //make our changes
                 sut.Name = updatedData;
 
-                controller.Put(sut.Id, sut);
+                controller.Put(sut.Id.ToString(), sut);
             }
 
             using (var context = new SampleContext(options))
@@ -172,7 +172,7 @@ namespace GenericApi.Tests
                 //make our changes
                 sut.Name = updatedData;
 
-                controller.Put(sut.Id, sut);
+                controller.Put(sut.Id.ToString(), sut);
             }
 
             using (var context = new SampleContext(options))
