@@ -79,3 +79,111 @@ private IGenericService<Product, Guid, StoreDbContext> _service;
 
 
 I have included a full working sample MVC project along with the source code showing all of the configuration in place.
+
+**What about ViewModels, InputModels and DTO's?**
+
+GenericApi can support different models for Input and Views by adding the GenericApi.ModelExtensions package from NuGet to a project that already has GenericApi
+
+    Install-Package GenericApi.ModelExtensions
+
+The extension currently had a dependency on AutoMapper and you must create your mapping profiles to allow the underlying mappings to function.
+
+The extension package gives you extra options when configuring your Startup.cs class
+
+      services.
+               AddMvc().
+                 AddGenericControllers(new OptionsBuilder
+                 {
+                     db = typeof(StoreDbContext),
+                     DbContextAssemblyName = nameof(StoreWebApi),
+                     EntityAssemblyName = nameof(StoreWebApi),
+                     UseInputModels = true,
+                     UseViewModels = true,
+                 });
+
+When this configuration is in place, GenericApi will scan your the assembly containing your entities for matching ViewModel and InputModel classes and if found will register those for use. For example a Product class with an Input and ViewModel would have 3 classes:
+
+ - Product.cs
+ - ProductViewModel.cs
+ - ProductInputModel.cs
+
+We would also have our corresponding AutoMapper Profile class with the following:
+
+     CreateMap<Product, ProductViewModel>();
+     CreateMap<ProductInputModel, Product>();
+
+You dont have to have both the ViewModel and InputModel in place. If for example you have an Order entity that accepts an InputModel but returns the full entity rather than an Order ViewModel, you would have 2 classes:
+
+ - Order.cs
+ - OrderInputModel.cs
+
+You can also use the same class for both Input and View Models by using the DTO format. Under Startup.cs use:
+
+     services.
+               AddMvc().
+                 AddGenericControllers(new OptionsBuilder
+                 {
+                     db = typeof(StoreDbContext),
+                     DbContextAssemblyName = nameof(StoreWebApi),
+                     EntityAssemblyName = nameof(StoreWebApi),
+                     UseDTOs = true
+                 });
+
+And you can create one additional class ProductDTO.cs that will be used for both Input and View Models.
+
+EFCore does not support Lazy Loading yet so to allow you to return data from related entities you can use the *MapToEntity* decorator on your ViewModel. For example a Product entity with a related ProductType entity:
+
+     public class Product: GenericEntity
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int Cost { get; set; }
+
+        public int ProductTypeId { get; set; }
+        public ProductType ProductType { get; set; }
+    }
+
+To return the Product Type with your Product data you can update your ViewModel to look like:
+
+     public class ProductViewModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int Cost { get; set; }
+
+        [MapToEntity(typeof(ProductType))]
+        public string ProductTypeName { get; set; }
+    }
+
+The above using strong typing to specify the related entity, however we can also pass in a string to access the related entity, or of we want to chain related entities. An example Order class could be:
+
+    public class Order : GenericEntity
+    {
+        public int Id { get; set; }
+        public int Quantity { get; set; }
+        public int Total { get; set; }
+
+        public int ProductId { get; set; }
+        public Product Product { get; set; }
+    }
+
+With an AutoMapper profile containing:
+
+      CreateMap<Order, OrderViewModel>();
+      CreateMap<OrderInputModel, Order>();
+
+If we wanted the OrderViewModel to include both the Product and the Product Type we could update our ViewModel to :
+
+    public class OrderViewModel
+    {
+        public int Id { get; set; }
+        [MapToEntity("Product")]
+        public string ProductName { get; set; }
+        [MapToEntity("Product.ProductType")]
+        public string ProductTypeName { get; set; }
+        public int Quantity { get; set; }
+    }
+
+I have included a working example with DTOs along with the source.
+
+Please feel free to dig into the code and open a pull request with improvements, bug fixes and new features! 
