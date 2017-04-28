@@ -80,7 +80,7 @@ private IGenericService<Product, Guid, StoreDbContext> _service;
 
 I have included a full working sample MVC project along with the source code showing all of the configuration in place.
 
-**What about ViewModels, InputModels and DTO's?**
+# What about ViewModels, InputModels and DTO's?
 
 GenericApi can support different models for Input and Views by adding the GenericApi.ModelExtensions package from NuGet to a project that already has GenericApi
 
