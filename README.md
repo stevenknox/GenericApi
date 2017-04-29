@@ -2,6 +2,8 @@
 
 # Generic WebAPI, Service Layer and Repository for AspNetCore
 
+> Please note this is still in active development and hasn't been tested enough yet for Production systems. Currently perfect for prototyping and if you encounter an y problems please open an issue or create a pull request.
+
 Middleware to dynamically generate WebAPI controllers and a Service and Repository Layer for any Model that has been registered as a DBSet in EFCore. Simply decorate your Model class or inherit from a base GenericModel class, register the middleware in your startup class and it will create full a full API with the underlying CRUD Service layer.
 
 
