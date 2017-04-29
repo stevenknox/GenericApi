@@ -1,17 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.10
+VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenericApi", "GenericApi\GenericApi.csproj", "{5AF1816D-761F-44AB-9B7B-038CA4593BC6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenericApi.Tests", "GenericApi.Tests\GenericApi.Tests.csproj", "{B03B4143-D85E-49D0-943F-9CB8D48B8507}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleWebApi", "SampleWebApi\SampleWebApi.csproj", "{53F14A9F-59DA-4CAE-8CE3-5366442B770B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleWebApi", "Samples\SampleWebApi\SampleWebApi.csproj", "{53F14A9F-59DA-4CAE-8CE3-5366442B770B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenericApi.ModelExtensions", "GenericApi.ModelExtensions\GenericApi.ModelExtensions.csproj", "{A3A48707-80E6-4D40-9B22-18674897DFA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleWebApiWithDTO", "SampleWebApiWithDTO\SampleWebApiWithDTO.csproj", "{FAE5AAF6-23EC-4C1C-8659-19AF8B629945}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleWebApiWithDTO", "Samples\SampleWebApiWithDTO\SampleWebApiWithDTO.csproj", "{FAE5AAF6-23EC-4C1C-8659-19AF8B629945}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{691AD735-3794-4BE0-A0FC-E51751005568}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,5 +44,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{53F14A9F-59DA-4CAE-8CE3-5366442B770B} = {691AD735-3794-4BE0-A0FC-E51751005568}
+		{FAE5AAF6-23EC-4C1C-8659-19AF8B629945} = {691AD735-3794-4BE0-A0FC-E51751005568}
 	EndGlobalSection
 EndGlobal
