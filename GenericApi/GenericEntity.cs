@@ -4,7 +4,7 @@ namespace GenericApi
 {
     public class GenericEntity: IHasGenericService
     {
-        [NotMapped]
+        [NotMappedAttribute]
         public EntityState EntityState { get; set; }
     }
 }

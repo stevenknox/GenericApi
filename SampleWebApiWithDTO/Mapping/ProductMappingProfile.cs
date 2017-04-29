@@ -7,7 +7,7 @@ namespace SampleWebApiWithDTO.Mapping
     {
         public ProductMappingProfile()
         {
-            CreateMap<Product, ProductViewModel>();
+           // CreateMap<Product, ProductViewModel>();
         }
     }
 }

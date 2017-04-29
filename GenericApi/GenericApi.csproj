@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>0.5.0</Version>
+    <Version>0.5.1</Version>
     <Authors>Steven Knox</Authors>
     <Company />
     <Description>Generic WebAPI, Service Layer and Repository for AspNetCore</Description>
@@ -11,6 +11,8 @@
     <PackageProjectUrl>https://github.com/stevenknox/GenericApi</PackageProjectUrl>
     <PackageReleaseNotes></PackageReleaseNotes>
     <Copyright>Copyright Steven Knox 2017</Copyright>
+    <AssemblyVersion>0.5.1.0</AssemblyVersion>
+    <FileVersion>0.5.1.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

@@ -39,7 +39,8 @@ namespace GenericApi
 
             foreach (var includeProperty in includeProperties)
             {
-                _context.Entry(query).Reference(includeProperty).Load();
+                if (includeProperty != null)
+                    _context.Entry(query).Reference(includeProperty).Load();
             }
 
             return query;
@@ -51,7 +52,8 @@ namespace GenericApi
 
             foreach (var includeProperty in includeProperties)
             {
-                _context.Entry(query).Reference(includeProperty).Load();
+                if (includeProperty != null)
+                    _context.Entry(query).Reference(includeProperty).Load();
             }
 
             return query;
@@ -72,7 +74,8 @@ namespace GenericApi
             IQueryable<T> query = _context.Set<T>();
             foreach (var includeProperty in includeProperties)
             {
-                query = query.Include(includeProperty);
+                if(includeProperty != null)
+                    query = query.Include(includeProperty);
             }
             return query;
         }
@@ -82,7 +85,8 @@ namespace GenericApi
             IQueryable<T> query = _context.Set<T>();
             foreach (var includeProperty in includeProperties)
             {
-                query = query.Include(includeProperty);
+                if (includeProperty != null)
+                    query = query.Include(includeProperty);
             }
             return query;
         }
