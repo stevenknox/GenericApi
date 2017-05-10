@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GenericApi
 {
@@ -12,6 +13,7 @@ namespace GenericApi
 
     [Produces("application/json")]
     [Route("api/[controller]")]
+    [Authorize(Policy = "SecureGenericApi")]
     public class ServiceController<T, Tid, TContext> : Controller 
     {
         private IGenericService<T, Tid, TContext> _service;

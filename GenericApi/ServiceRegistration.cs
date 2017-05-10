@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
+using Microsoft.AspNetCore.Authorization;
 
 //https://github.com/aspnet/Entropy/tree/42171b706540d23e0298c8f16a4b44a9ae805c0a/samples/Mvc.GenericControllers
 //https://docs.microsoft.com/en-us/aspnet/core/mvc/advanced/app-parts
@@ -18,8 +19,9 @@ namespace GenericApi
     {
         public static void AddGenericServices(this IServiceCollection services)
         {
-            services.AddScoped(typeof(IGenericService<,>), typeof(GenericServiceSimple<,>));
-            services.AddScoped(typeof(IGenericService<,,>), typeof(GenericService<,,>));
+            services.AddScoped(typeof(IGenericService<,>), typeof(GenericRepositorySimple<,>));
+            services.AddScoped(typeof(IGenericService<,,>), typeof(GenericRepository<,,>));
+            services.AddSingleton<IAuthorizationHandler, SecureGenericApHandler>();
         }
 
     }

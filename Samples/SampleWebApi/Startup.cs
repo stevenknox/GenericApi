@@ -35,6 +35,12 @@ namespace SampleWebApi
                 AddMvc().
                 AddGenericControllers(nameof(SampleWebApi));
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("SecureGenericApi", policy => policy.Requirements.Add(new SecureGenericApiRequirement(false)));
+            });
+
+
             //Use if EF Entities and DbContext in same assembly but more than 1 DbContext exsits in that assembly
             //services.
             //   AddMvc().

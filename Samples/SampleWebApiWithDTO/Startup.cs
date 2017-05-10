@@ -41,6 +41,11 @@ namespace SampleWebApiWithDTO
                      UseViewModels = true,
                  });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("SecureGenericApi", policy => policy.Requirements.Add(new SecureGenericApiRequirement(false)));
+            });
+
             services.AddGenericServices();
 
             services.AddAutoMapper(typeof(Startup));
