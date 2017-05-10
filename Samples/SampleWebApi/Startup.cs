@@ -37,7 +37,7 @@ namespace SampleWebApi
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("SecureGenericApi", policy => policy.Requirements.Add(new SecureGenericApiRequirement(ApiAuthorization.Authorize)));
+                options.AddPolicy("SecureGenericApi", policy => policy.Requirements.Add(new SecureGenericApiRequirement(ApiAuthorization.AllowAnonymous)));
             });
 
 

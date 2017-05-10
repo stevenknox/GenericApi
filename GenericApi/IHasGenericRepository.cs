@@ -1,6 +1,6 @@
 ﻿namespace GenericApi
 {
-    public interface IHasGenericService
+    public interface IHasGenericRepository
     {
         EntityState EntityState { get; set; }
     }

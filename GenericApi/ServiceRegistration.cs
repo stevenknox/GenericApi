@@ -87,7 +87,7 @@ namespace GenericApi
             if (Options.db == null)
                 Options.db = EntityTypes.GetTypesFromAssembly(typeof(DbContext), Options.GetDbAssembly()).FirstOrDefault().AsType();
 
-            foreach (var entityType in EntityTypes.GetTypesFromAssembly(typeof(IHasGenericService), Options.EntityAssemblyName))
+            foreach (var entityType in EntityTypes.GetTypesFromAssembly(typeof(IHasGenericRepository), Options.EntityAssemblyName))
             {
                 var typeName = entityType.Name + "Controller";
                 if (!feature.Controllers.Any(t => t.Name == typeName))
