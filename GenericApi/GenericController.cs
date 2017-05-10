@@ -8,7 +8,7 @@ namespace GenericApi
     [GenericControllerNameConvention]
     public class GenericController<T, Tid, TContext> : ServiceController<T, Tid, TContext>
     {
-        public GenericController(IGenericService<T, Tid, TContext> service) : base(service) { }
+        public GenericController(IGenericRepository<T, Tid, TContext> service) : base(service) { }
     }
 
     [Produces("application/json")]
@@ -16,9 +16,9 @@ namespace GenericApi
     [Authorize(Policy = "SecureGenericApi")]
     public class ServiceController<T, Tid, TContext> : Controller 
     {
-        private IGenericService<T, Tid, TContext> _service;
+        private IGenericRepository<T, Tid, TContext> _service;
 
-        public ServiceController(IGenericService<T, Tid, TContext> service)
+        public ServiceController(IGenericRepository<T, Tid, TContext> service)
         {
             _service = service;
         }

@@ -4,11 +4,17 @@ namespace GenericApi
 {
     public class SecureGenericApiRequirement : IAuthorizationRequirement
     {
-        public SecureGenericApiRequirement(bool isSecured)
+        public SecureGenericApiRequirement(ApiAuthorization auth)
         {
-            IsSecured = isSecured;
+            IsSecured = auth == ApiAuthorization.Authorize;
         }
 
         public bool IsSecured { get; set; }
+    }
+
+    public enum ApiAuthorization
+    {
+        Authorize,
+        AllowAnonymous
     }
 }

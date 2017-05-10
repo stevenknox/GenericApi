@@ -19,8 +19,8 @@ namespace GenericApi
     {
         public static void AddGenericServices(this IServiceCollection services)
         {
-            services.AddScoped(typeof(IGenericService<,>), typeof(GenericRepositorySimple<,>));
-            services.AddScoped(typeof(IGenericService<,,>), typeof(GenericRepository<,,>));
+            services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepositorySimple<,>));
+            services.AddScoped(typeof(IGenericRepository<,,>), typeof(GenericRepository<,,>));
             services.AddSingleton<IAuthorizationHandler, SecureGenericApHandler>();
         }
 

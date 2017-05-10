@@ -43,7 +43,7 @@ namespace SampleWebApiWithDTO
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("SecureGenericApi", policy => policy.Requirements.Add(new SecureGenericApiRequirement(false)));
+                options.AddPolicy("SecureGenericApi", policy => policy.Requirements.Add(new SecureGenericApiRequirement(ApiAuthorization.AllowAnonymous)));
             });
 
             services.AddGenericServices();

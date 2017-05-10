@@ -13,16 +13,16 @@ namespace GenericApi
     [GenericControllerNameConvention]
     public class GenericDTOController<T, TInputModel, TViewModel, Tid, TContext> : DTOController<T, TInputModel, TViewModel, Tid, TContext>
     {
-        public GenericDTOController(IGenericService<T, Tid, TContext> service) : base(service) { }
+        public GenericDTOController(IGenericRepository<T, Tid, TContext> service) : base(service) { }
     }
 
     [Produces("application/json")]
     [Route("api/[controller]")]
     public class DTOController<T, TInputModel, TViewModel, Tid, TContext> : GenericController<T, Tid, TContext>
     {
-        private IGenericService<T, Tid, TContext> _service;
+        private IGenericRepository<T, Tid, TContext> _service;
 
-        public DTOController(IGenericService<T, Tid, TContext> service) : base(service) {
+        public DTOController(IGenericRepository<T, Tid, TContext> service) : base(service) {
             _service = service;
         }
 
