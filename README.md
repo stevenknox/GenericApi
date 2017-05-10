@@ -1,11 +1,11 @@
 [![NuGet](https://img.shields.io/nuget/v/Nuget.Core.svg)](https://www.nuget.org/packages/GenericApi)  [![Twitter Follow](https://img.shields.io/twitter/follow/espadrine.svg?style=social&label=Follow)](https://twitter.com/stevenknox101)
 
-# Generic WebAPI, Service Layer and Repository for AspNetCore
+# Generic WebAPI and Repository for AspNetCore
 
 > Please note this is still in active development and hasn't been tested enough yet for Production systems. Currently perfect for prototyping and if you encounter any problems please open an issue or create a pull request.
 
 
-Middleware to dynamically generate WebAPI controllers and a Service and Repository Layer for any Model that has been registered as a DBSet in EFCore. Simply decorate your Model class or inherit from a base GenericModel class, register the middleware in your startup class and it will create full a full API with the underlying CRUD Service layer.
+Middleware to dynamically generate WebAPI controllers and Repository Layer for any Model that has been registered as a DBSet in EFCore. Simply decorate your Model class or inherit from a base GenericModel class, register the middleware in your startup class and it will create full a full API with the underlying CRUD repository layer.
 
 
 **Get Started**
@@ -17,6 +17,14 @@ Install the package into your Asp.NetCore MVC project
 Under ConfigureServices within the Startup.cs you can enable the generic service layer by adding the following:
 
      services.AddGenericServices();
+
+You also need to specific the Authorization type by registering a Policy within the AddAuthorization extension and specifying if you wish to AllowAnonymous or Authorize.
+
+     services.AddAuthorization(options =>
+      {
+			options.AddPolicy("SecureGenericApi", policy => 
+			policy.Requirements.Add(new SecureGenericApiRequirement(ApiAuthorization.AllowAnonymous)));
+       });
 
 In the same startup method you can register dynamic WebApi controllers by adding the following method to AddMvc(). Replace *SampleWebApi* with the name of the Assembly containing your EF Entities.
 
@@ -40,7 +48,7 @@ A complete ConfigureServices method that includes adding an Entity Framework DbC
 
     .AddGenericControllers(nameof(StoreWebApi), typeof(StoreDbContext));
 
-To enable dynamic API and Service generation for your Entity Framework entities ensure it inherits from the *GenericEntity* base class and has a primary key called *Id* . The Id can be any primative type.
+To enable dynamic API and Repository generation for your Entity Framework entities ensure it inherits from the *GenericEntity* base class and has a primary key called *Id* . The Id can be any primative type.
 
     public class Product: GenericEntity
     {
@@ -53,28 +61,28 @@ This is everything you need to configure, simply launch your application and nav
     /api/product
     /api/product/1
 
-The underlying service layer can be accessed using Dependency Injection:
+The underlying repository layer can be accessed using Dependency Injection:
 
-	 private IGenericService<Product, StoreDbContext> _service;
+	 private IGenericRepository<Product, StoreDbContext> _repo;
 		
-	 public HomeController(IGenericService<Product, StoreDbContext> service)
+	 public HomeController(IGenericRepository<Product, StoreDbContext> repo)
 	   {
-	        _service = service;
+	        _repo = repo;
 	    }
 	     
 	 public IActionResult Index()
 	 {
-			var products = _service.GetAll();
+			var products = _repo.GetAll();
 	
 		return View(products);
 	 }
 	
 
-If you have used a primative type other than an *Int* for your Id property you can pass in the type to the service constructor, for example if you used a GUID:
+If you have used a primative type other than an *Int* for your Id property you can pass in the type to the repository constructor, for example if you used a GUID:
      
-private IGenericService<Product, Guid, StoreDbContext> _service;
+private IGenericRepository<Product, Guid, StoreDbContext> _service;
 	
-    public HomeController(IGenericService<Product, Guid, StoreDbContext> service)
+    public HomeController(IGenericRepository<Product, Guid, StoreDbContext> service)
      {
          _service = service;
      }
