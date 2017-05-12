@@ -42,6 +42,12 @@ A complete ConfigureServices method that includes adding an Entity Framework DbC
                 AddGenericControllers(nameof(StoreWebApi));
 
             services.AddGenericServices();
+	    
+			services.AddAuthorization(options =>
+			{
+				options.AddPolicy("SecureGenericApi", policy => 
+				policy.Requirements.Add(new SecureGenericApiRequirement(ApiAuthorization.AllowAnonymous)));
+			 });
         }
 
 **Note:** Current version can only support generic services for one DbContext. If you have more than one DbContext within your application you must explicitly specify the DbContext to use during the middleware registration
