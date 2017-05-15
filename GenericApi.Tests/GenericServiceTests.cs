@@ -23,10 +23,10 @@ namespace GenericApi.Tests
         {
             ResetData();
             var entities = SeedData(nameof(GenericService_Should_GetEntities));
-            List<SampleEntity> sut;
+            List<Blog> sut;
             using (var context = new SampleContext(options))
             {
-                var service = new GenericRepositorySimple<SampleEntity, SampleContext>(context);
+                var service = new GenericRepositorySimple<Blog, SampleContext>(context);
 
                 sut = service.GetAll();
             }
@@ -41,14 +41,35 @@ namespace GenericApi.Tests
             var data = $"New Entity from {nameof(GenericService_Should_SaveEntity)} ";
             using (var context = new SampleContext(options))
             {
-                var service = new GenericRepositorySimple<SampleEntity, SampleContext>(context);
+                var service = new GenericRepositorySimple<Blog, SampleContext>(context);
 
-                service.Add(new SampleEntity { Name = data });
+                service.Add(new Blog { Name = data });
             }
 
             using (var context = new SampleContext(options))
             {
-                Assert.NotNull(context.SampleEntities.FirstOrDefault(f => f.Name == data));
+                Assert.NotNull(context.Blogs.FirstOrDefault(f => f.Name == data));
+            }
+        }
+
+
+        [Fact]
+        public void GenericService_Should_SaveEntityGraph()
+        {
+            var data = $"New Entity from {nameof(GenericService_Should_SaveEntityGraph)} ";
+            using (var context = new SampleContext(options))
+            {
+                var service = new GenericRepositorySimple<Blog, SampleContext>(context);
+
+                var blog = new Blog { Name = data };
+                blog.Posts.Add(new Post { Blog = blog, Content = "Blog Post", Title = "Post Title" });
+                service.Add(blog);
+            }
+
+            using (var context = new SampleContext(options))
+            {
+                Assert.NotNull(context.Blogs.FirstOrDefault(f => f.Name == data));
+                Assert.True(context.Blogs.Include(p => p.Posts).FirstOrDefault(f => f.Name == data).Posts.Count() > 0);
             }
         }
 
@@ -58,15 +79,15 @@ namespace GenericApi.Tests
         {
             ResetData();
             var entities = SeedData(nameof(GenericService_Should_GetEntities));
-            List<SampleEntity> sut;
+            List<Blog> sut;
           
             using (var context = new SampleContext(options))
             {
-                var service = new GenericRepositorySimple<SampleEntity, SampleContext>(context);
-                var controller = new GenericController<SampleEntity, int, SampleContext>(service);
+                var service = new GenericRepositorySimple<Blog, SampleContext>(context);
+                var controller = new GenericController<Blog, int, SampleContext>(service);
 
                 var response = controller.Get() as OkObjectResult;
-                sut = response.Value as List<SampleEntity>;
+                sut = response.Value as List<Blog>;
             }
 
             Assert.Equal(10, sut.Count());
@@ -78,15 +99,15 @@ namespace GenericApi.Tests
         {
             ResetData();
             var entity = SeedData(nameof(GenericController_Should_GetSingleEntity)).First();
-            SampleEntity sut;
+            Blog sut;
 
             using (var context = new SampleContext(options))
             {
-                var service = new GenericRepositorySimple<SampleEntity, SampleContext>(context);
-                var controller = new GenericController<SampleEntity, int, SampleContext>(service);
+                var service = new GenericRepositorySimple<Blog, SampleContext>(context);
+                var controller = new GenericController<Blog, int, SampleContext>(service);
 
                 var response = controller.Find(entity.Id.ToString()) as OkObjectResult;
-                sut = response.Value as SampleEntity;
+                sut = response.Value as Blog;
             }
 
             Assert.Equal(entity.Id, sut.Id);
@@ -101,15 +122,15 @@ namespace GenericApi.Tests
             var data = $"New Entity from {nameof(GenericController_Should_CreateEntity)} ";
             using (var context = new SampleContext(options))
             {
-                var service = new GenericRepositorySimple<SampleEntity, SampleContext>(context);
-                var controller = new GenericController<SampleEntity, int, SampleContext>(service);
+                var service = new GenericRepositorySimple<Blog, SampleContext>(context);
+                var controller = new GenericController<Blog, int, SampleContext>(service);
 
-                controller.Post(new SampleEntity { Name = data });
+                controller.Post(new Blog { Name = data });
             }
 
             using (var context = new SampleContext(options))
             {
-                Assert.NotNull(context.SampleEntities.FirstOrDefault(f => f.Name == data));
+                Assert.NotNull(context.Blogs.FirstOrDefault(f => f.Name == data));
             }
         }
 
@@ -118,12 +139,12 @@ namespace GenericApi.Tests
         {
             var data = $"Initial Data for {nameof(GenericController_Should_UpdateEntity)}";
             var updatedData = $"Updated Data for {nameof(GenericController_Should_UpdateEntity)}";
-            var sut = SaveEntity(options, new SampleEntity { Name = data });
+            var sut = SaveEntity(options, new Blog { Name = data });
 
             using (var context = new SampleContext(options))
             {
-                var service = new GenericRepositorySimple<SampleEntity, SampleContext>(context);
-                var controller = new GenericController<SampleEntity, int, SampleContext>(service);
+                var service = new GenericRepositorySimple<Blog, SampleContext>(context);
+                var controller = new GenericController<Blog, int, SampleContext>(service);
 
                 //make our changes
                 sut.Name = updatedData;
@@ -133,7 +154,7 @@ namespace GenericApi.Tests
 
             using (var context = new SampleContext(options))
             {
-                Assert.Same(context.SampleEntities.FirstOrDefault(f => f.Id == sut.Id).Name, updatedData);
+                Assert.Same(context.Blogs.FirstOrDefault(f => f.Id == sut.Id).Name, updatedData);
             }
         }
 
@@ -141,19 +162,19 @@ namespace GenericApi.Tests
         public void GenericController_Should_DeleteEntity()
         {
             var data = $"Initial Data for {nameof(GenericController_Should_DeleteEntity)}";
-            var sut = SaveEntity(options, new SampleEntity { Name = data });
+            var sut = SaveEntity(options, new Blog { Name = data });
 
             using (var context = new SampleContext(options))
             {
-                var service = new GenericRepositorySimple<SampleEntity, SampleContext>(context);
-                var controller = new GenericController<SampleEntity, int, SampleContext>(service);
+                var service = new GenericRepositorySimple<Blog, SampleContext>(context);
+                var controller = new GenericController<Blog, int, SampleContext>(service);
 
                 controller.Delete(sut.Id.ToString());
             }
 
             using (var context = new SampleContext(options))
             {
-                Assert.Null(context.SampleEntities.FirstOrDefault(f => f.Id == sut.Id));
+                Assert.Null(context.Blogs.FirstOrDefault(f => f.Id == sut.Id));
             }
         }
 
@@ -162,12 +183,12 @@ namespace GenericApi.Tests
         {
             var data = $"Initial Data for {nameof(GenericController_Should_SupportGuidPrimaryKey)}";
             var updatedData = $"Updated Data for {nameof(GenericController_Should_SupportGuidPrimaryKey)}";
-            var sut = SaveGuidEntity(options, new SampleEntityWithGuid { Name = data });
+            var sut = SaveGuidEntity(options, new EntityWithGuid { Name = data });
 
             using (var context = new SampleContext(options))
             {
-                var service = new GenericRepository<SampleEntityWithGuid, Guid, SampleContext>(context);
-                var controller = new GenericController<SampleEntityWithGuid, Guid, SampleContext>(service);
+                var service = new GenericRepository<EntityWithGuid, Guid, SampleContext>(context);
+                var controller = new GenericController<EntityWithGuid, Guid, SampleContext>(service);
 
                 //make our changes
                 sut.Name = updatedData;
@@ -177,7 +198,7 @@ namespace GenericApi.Tests
 
             using (var context = new SampleContext(options))
             {
-                Assert.Same(context.SampleEntitiesWithGuid.FirstOrDefault(f => f.Id == sut.Id).Name, updatedData);
+                Assert.Same(context.EntitiesWithGuid.FirstOrDefault(f => f.Id == sut.Id).Name, updatedData);
             }
         }
 
@@ -186,15 +207,15 @@ namespace GenericApi.Tests
         {
             ResetData();
             var entity = SeedDataWithGuids(nameof(GenericController_Should_GetSingleEntityWithGuid)).First();
-            SampleEntityWithGuid sut;
+            EntityWithGuid sut;
 
             using (var context = new SampleContext(options))
             {
-                var service = new GenericRepository<SampleEntityWithGuid, Guid, SampleContext>(context);
-                var controller = new GenericController<SampleEntityWithGuid, Guid, SampleContext>(service);
+                var service = new GenericRepository<EntityWithGuid, Guid, SampleContext>(context);
+                var controller = new GenericController<EntityWithGuid, Guid, SampleContext>(service);
 
                 var response = controller.Find(entity.Id.ToString()) as OkObjectResult;
-                sut = response.Value as SampleEntityWithGuid;
+                sut = response.Value as EntityWithGuid;
             }
 
             Assert.Equal(entity.Id, sut.Id);
@@ -202,22 +223,22 @@ namespace GenericApi.Tests
 
         }
 
-        private static SampleEntity SaveEntity(DbContextOptions<SampleContext> options, SampleEntity data)
+        private static Blog SaveEntity(DbContextOptions<SampleContext> options, Blog data)
         {
             using (var context = new SampleContext(options))
             {
-                context.SampleEntities.Add(data);
+                context.Blogs.Add(data);
                 context.SaveChanges();
                 return data;
 
             }
         }
 
-        private static SampleEntityWithGuid SaveGuidEntity(DbContextOptions<SampleContext> options, SampleEntityWithGuid data)
+        private static EntityWithGuid SaveGuidEntity(DbContextOptions<SampleContext> options, EntityWithGuid data)
         {
             using (var context = new SampleContext(options))
             {
-                context.SampleEntitiesWithGuid.Add(data);
+                context.EntitiesWithGuid.Add(data);
                 context.SaveChanges();
                 return data;
 
@@ -225,22 +246,22 @@ namespace GenericApi.Tests
         }
 
 
-        private List<SampleEntity> SeedData(string name)
+        private List<Blog> SeedData(string name)
         {
-            var entities = new List<SampleEntity>();
+            var entities = new List<Blog>();
             for (int i = 0; i < 10; i++)
             {
-                entities.Add(SaveEntity(options, new SampleEntity { Name = $"Entity {i} {name}" }));
+                entities.Add(SaveEntity(options, new Blog { Name = $"Entity {i} {name}" }));
             }
             return entities;
         }
 
-        private List<SampleEntityWithGuid> SeedDataWithGuids(string name)
+        private List<EntityWithGuid> SeedDataWithGuids(string name)
         {
-            var entities = new List<SampleEntityWithGuid>();
+            var entities = new List<EntityWithGuid>();
             for (int i = 0; i < 10; i++)
             {
-                entities.Add(SaveGuidEntity(options, new SampleEntityWithGuid { Name = $"Entity {i} {name}" }));
+                entities.Add(SaveGuidEntity(options, new EntityWithGuid { Name = $"Entity {i} {name}" }));
             }
             return entities;
         }
@@ -249,8 +270,8 @@ namespace GenericApi.Tests
         {
             using (var context = new SampleContext(options))
             {
-                context.SampleEntities.RemoveRange(context.SampleEntities);
-                context.SampleEntitiesWithGuid.RemoveRange(context.SampleEntitiesWithGuid);
+                context.Blogs.RemoveRange(context.Blogs);
+                context.EntitiesWithGuid.RemoveRange(context.EntitiesWithGuid);
                 context.SaveChanges();
             }
         }

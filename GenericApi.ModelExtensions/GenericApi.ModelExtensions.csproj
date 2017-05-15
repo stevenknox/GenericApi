@@ -17,8 +17,4 @@
     <PackageReference Include="AutoMapper" Version="6.0.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\GenericApi\GenericApi.csproj" />
-  </ItemGroup>
-
 </Project>

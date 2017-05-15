@@ -107,7 +107,8 @@ namespace GenericApi
         {
             if (entity != null)
             {
-                _context.AddOrUpdate<T, Tid>(entity);
+                _context.ApplyStateChanges(entity, entity.EntityState);
+
                 _context.SaveChanges();
                 return entity;
             }

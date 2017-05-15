@@ -2,7 +2,7 @@
 
 namespace GenericApi.Tests.Model
 {
-    public class SampleEntityWithGuid: GenericEntity
+    public class EntityWithGuid: GenericEntity
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

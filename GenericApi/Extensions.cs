@@ -129,63 +129,12 @@ namespace GenericApi
             return (T)retval;
         }
 
-        public static void AddOrUpdate(this DbContext ctx, object entity)
+      
+        public static void ApplyStateChanges(this DbContext context, GenericEntity entity, EntityState state)
         {
-            var entry = ctx.Entry(entity);
-
-            switch (entry.State)
-            {
-                case Microsoft.EntityFrameworkCore.EntityState.Detached:
-                    ctx.Add(entity);
-                    break;
-                case Microsoft.EntityFrameworkCore.EntityState.Modified:
-                    ctx.Update(entity);
-                    break;
-                case Microsoft.EntityFrameworkCore.EntityState.Added:
-                    ctx.Add(entity);
-                    break;
-                case Microsoft.EntityFrameworkCore.EntityState.Unchanged:
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+            context.ChangeTracker.TrackGraph(entity, e => e.Entry.State = GetEntityState(state));
         }
-
-        public static void AddOrUpdate<T, Tid>(this DbContext ctx, T entity) where T : GenericEntity
-        {
-            var entry = ctx.Entry(entity);
-            var stateInfo = entry.Entity;
-            entry.State = GetEntityState(stateInfo.EntityState);
-
-            switch (entry.State)
-            {
-                case Microsoft.EntityFrameworkCore.EntityState.Detached:
-                    ctx.Add(entity);
-                    break;
-                case Microsoft.EntityFrameworkCore.EntityState.Modified:
-                    ctx.Update(entity);
-                    break;
-                case Microsoft.EntityFrameworkCore.EntityState.Added:
-                    ctx.Add(entity);
-                    break;
-                case Microsoft.EntityFrameworkCore.EntityState.Unchanged:
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        public static void ApplyStateChanges(this DbContext context)
-        {
-            foreach (var entry in context.ChangeTracker.Entries<IEntityWithState>())
-            {
-                IEntityWithState stateInfo = entry.Entity;
-                entry.State = GetEntityState(stateInfo.EntityState);
-            }
-        }
-
+        
         public static Microsoft.EntityFrameworkCore.EntityState GetEntityState(EntityState entityState)
         {
             switch (entityState)
