@@ -93,9 +93,9 @@ private IGenericRepository<Product, Guid, StoreDbContext> _service;
          _service = service;
      }
     
-Input can be sanitized for Post and Put requests by registering a service in startup that inherits from  IInputSanitizer and implements the method Sanitize. 
+Input can be sanitized for Post and Put requests by registering passing in the service to 'AddGenericServices' in startup. The service must inherit from IInputSanitizer and implements the method Sanitize. 
 
-      services.AddTransient<IInputSanitizer, InputSanitizer>();
+      services.AddGenericServices(UseSanitizer: typeof(InputSanitizer));
 
 You can provide your own implementation within your InputSanitizer.cs class, for example using the HtmlSanitizer nuget package as follows:
 
