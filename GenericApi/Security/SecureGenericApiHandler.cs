@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace GenericApi
 {
-    public class SecureGenericApHandler : AuthorizationHandler<SecureGenericApiRequirement>
+    public class SecureGenericApiHandler : AuthorizationHandler<SecureGenericApiRequirement>
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, SecureGenericApiRequirement requirement)
         {

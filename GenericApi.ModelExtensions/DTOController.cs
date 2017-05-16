@@ -1,11 +1,7 @@
-﻿using System.Reflection;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 using System;
 using System.Linq;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace GenericApi
 {
@@ -48,6 +44,7 @@ namespace GenericApi
         }
 
         [HttpPost]
+        [SanitizeModel]
         public override IActionResult Post([FromBody]object input)
         {
             
@@ -62,6 +59,7 @@ namespace GenericApi
         }
 
         [HttpPut("{id}")]
+        [SanitizeModel]
         public override IActionResult Put(string id, [FromBody]object input)
         {
             object _id = GetIdFromParameter(id);

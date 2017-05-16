@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using SampleWebApi.Data;
 using System;
+using SampleWebApi.Services;
 
 namespace SampleWebApi
 {
@@ -47,6 +48,9 @@ namespace SampleWebApi
             //   AddGenericControllers(nameof(SampleWebApi), typeof(StoreDbContext));
 
             services.AddGenericServices();
+
+            //if you want to sanitize Post/Put models
+            //services.AddTransient<IInputSanitizer, InputSanitizer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

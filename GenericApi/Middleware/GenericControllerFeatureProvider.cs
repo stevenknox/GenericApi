@@ -1,74 +1,17 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyModel;
-using Microsoft.AspNetCore.Authorization;
 
 //https://github.com/aspnet/Entropy/tree/42171b706540d23e0298c8f16a4b44a9ae805c0a/samples/Mvc.GenericControllers
 //https://docs.microsoft.com/en-us/aspnet/core/mvc/advanced/app-parts
 
 namespace GenericApi
 {
-    public static class GenericServicesMiddleware
-    {
-        public static void AddGenericServices(this IServiceCollection services)
-        {
-            services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepositorySimple<,>));
-            services.AddScoped(typeof(IGenericRepository<,,>), typeof(GenericRepository<,,>));
-            services.AddSingleton<IAuthorizationHandler, SecureGenericApHandler>();
-        }
 
-    }
-
-    public static class GenericControllersMiddleware
-    {   
-        public static void AddGenericControllers(this IMvcBuilder builder, string assemblyName, Type db = null)
-        {
-            var options = new Options { db = db, EntityAssemblyName = assemblyName };
-            builder.ConfigureApplicationPartManager(p => p.FeatureProviders.Add(new GenericControllerFeatureProvider(options)));
-        }
-
-        public static void AddGenericControllers(this IMvcBuilder builder, Options options)
-        {
-            builder.ConfigureApplicationPartManager(p => p.FeatureProviders.Add(new GenericControllerFeatureProvider(options)));
-        }
-
-
-    }
-
-    public class EntityTypes
-    {
-        public static List<TypeInfo> GetTypesFromAssembly(Type type, string assemblyName)
-        {
-            List<Assembly> loadableAssemblies = Extensions.FindAssemblies(assemblyName);
-
-            var typeList = new List<TypeInfo>();
-            var types = loadableAssemblies
-                .SelectMany(s => s.GetTypes())
-                .Where(p => type.IsAssignableFrom(p)).ToList();
-
-            types.ForEach(t => typeList.Add(t.GetTypeInfo()));
-
-            return typeList;
-        }
-
-        public static Type GetTypeFromAssembly(string type, string assemblyName)
-        {
-            Assembly assembly = Extensions.FindAssemblies(assemblyName).First();
-
-            return assembly.GetType(type);
-        }
-
-
-    }
-
-  
     public class GenericControllerFeatureProvider : IApplicationFeatureProvider<ControllerFeature>
      {
         public Options Options { get; set; }
@@ -139,23 +82,5 @@ namespace GenericApi
             }
         }
     }
-
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-     public class GenericControllerNameConvention : Attribute, IControllerModelConvention
-    {
-         public void Apply(ControllerModel controller)
-        {
-            var x = controller.ControllerType.GetGenericTypeDefinition();
-            if (x != typeof(GenericController<,,>) && ! x.Name.Contains("DTOController`5"))
-            {
-                throw new Exception("Not a generic controller!");
-            }
-
-            var entityType = controller.ControllerType.GenericTypeArguments[0];
-            controller.ControllerName = entityType.Name;
-        }
-    }
-
-
 
 }

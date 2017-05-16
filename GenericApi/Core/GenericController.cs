@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Newtonsoft.Json.Linq;
 
 namespace GenericApi
 {
@@ -23,6 +24,7 @@ namespace GenericApi
             _service = service;
         }
         [HttpGet("{id}")]
+
         public virtual IActionResult Find(string id)
         {
             object _id = GetIdFromParameter(id);
@@ -37,8 +39,12 @@ namespace GenericApi
         }
 
         [HttpPost]
+        [SanitizeModel]
         public virtual IActionResult Post([FromBody]object input)
         {
+            if (input.GetType() == typeof(JObject))
+                input = input.ToJObject().ToObject<T>();
+
             var result = _service.Add((T)input);
 
             return Ok(result);
@@ -46,9 +52,13 @@ namespace GenericApi
         }
 
         [HttpPut("{id}")]
+        [SanitizeModel]
         public virtual IActionResult Put(string id, [FromBody]object input)
         {
             object _id = GetIdFromParameter(id);
+
+            if (input.GetType() == typeof(JObject))
+                input = input.ToJObject().ToObject<T>();
 
             var result = _service.Update((T)input);
 

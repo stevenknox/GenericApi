@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SampleWebApiWithDTO.Data;
+using SampleWebApiWithDTO.Services;
 
 namespace SampleWebApiWithDTO
 {
@@ -46,9 +47,10 @@ namespace SampleWebApiWithDTO
                 options.AddPolicy("SecureGenericApi", policy => policy.Requirements.Add(new SecureGenericApiRequirement(ApiAuthorization.AllowAnonymous)));
             });
 
-            services.AddGenericServices();
+            services.AddGenericServices(UseSanitizer: typeof(InputSanitizer));
 
             services.AddAutoMapper(typeof(Startup));
+         
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
