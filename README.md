@@ -93,7 +93,38 @@ private IGenericRepository<Product, Guid, StoreDbContext> _service;
          _service = service;
      }
     
+Input can be sanitized for Post and Put requests by registering passing in the service to 'AddGenericServices' in startup. The service must inherit from IInputSanitizer and implements the method Sanitize. 
 
+      services.AddGenericServices(UseSanitizer: typeof(InputSanitizer));
+
+You can provide your own implementation within your InputSanitizer.cs class, for example using the HtmlSanitizer nuget package as follows:
+
+    using GenericApi;
+    using Ganss.XSS;
+    
+    namespace StoreWebApi.Services
+    {
+        public class InputSanitizer : IInputSanitizer
+        {
+            public string Sanitize(string input)
+            {
+                var sanitizer = new HtmlSanitizer();
+    
+                return sanitizer.Sanitize(input);
+            }
+        }
+    }
+
+You can also add this to other Controllers in your project by using the  [SanitizeModel] attribute.
+
+	[HttpPost]
+	[SanitizeModel]
+	public IActionResult Post([FromBody]ProductDTO input)
+	{
+
+	}
+     
+If you dont register a service IInputSanitizer in your startup.cs this process will be skipped and your API controller will accept any input sent from the client.
 
 I have included a full working sample MVC project along with the source code showing all of the configuration in place.
 
