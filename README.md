@@ -93,7 +93,7 @@ private IGenericRepository<Product, Guid, StoreDbContext> _service;
          _service = service;
      }
     
-Input can be sanitized for Post and Put requests by registering passing in the service to 'AddGenericServices' in startup. The service must inherit from IInputSanitizer and implements the method Sanitize. 
+Input can be sanitized for Post and Put requests by passing in your service implementation to 'AddGenericServices' in startup. The service must inherit from IInputSanitizer and implements the method Sanitize. 
 
       services.AddGenericServices(UseSanitizer: typeof(InputSanitizer));
 
