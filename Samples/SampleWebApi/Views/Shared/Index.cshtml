@@ -1,0 +1,14 @@
+﻿@model List<dynamic>
+@using System.Reflection
+
+<ul>
+    @foreach (var row in Model)
+    {
+        @foreach (var prop in row.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+        {
+            <li>>@prop.Name : @prop.GetValue(row,null)</li>
+        }
+    }
+
+    
+</ul>

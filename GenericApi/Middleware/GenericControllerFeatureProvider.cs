@@ -71,11 +71,19 @@ namespace GenericApi
                         var dtoController = EntityTypes.GetTypeFromAssembly("GenericApi.DTOController`5", "GenericApi.ModelExtensions");
                         var controllerType = dtoController.MakeGenericType(entityType.AsType(), im, vm, idType, Options.db).GetTypeInfo();
                         feature.Controllers.Add(controllerType);
+
+                        var dtoMvcController = EntityTypes.GetTypeFromAssembly("GenericApi.MvcDTOController`5", "GenericApi.ModelExtensions");
+                        var mvcControllerType = dtoController.MakeGenericType(entityType.AsType(), im, vm, idType, Options.db).GetTypeInfo();
+                        feature.Controllers.Add(mvcControllerType);
                     }
                     else
                     {
                         var controllerType = typeof(GenericController<,,>).MakeGenericType(entityType.AsType(), idType, Options.db).GetTypeInfo();
                         feature.Controllers.Add(controllerType);
+
+                        //mvc
+                        var mvcControllerType = typeof(GenericMVCController<,,>).MakeGenericType(entityType.AsType(), idType, Options.db).GetTypeInfo();
+                        feature.Controllers.Add(mvcControllerType);
                     }
                     
                 }
