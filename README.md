@@ -1,6 +1,6 @@
 [![NuGet](https://img.shields.io/nuget/v/Nuget.Core.svg)](https://www.nuget.org/packages/GenericApi)  [![Twitter Follow](https://img.shields.io/twitter/follow/espadrine.svg?style=social&label=Follow)](https://twitter.com/stevenknox101)
 
-# Generic WebAPI and Repository for AspNetCore
+# Generic WebAPI and Repository for AspNetCore 2.0
 
 Middleware to dynamically generate WebAPI controllers and Repository Layer for any Model that has been registered as a DBSet in EFCore. Simply decorate your Model class or inherit from a base GenericModel class, register the middleware in your startup class and it will create full a full API with the underlying CRUD repository layer.
 
