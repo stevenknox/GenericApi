@@ -64,16 +64,15 @@ namespace GenericApi
                     if (vm == null) vm = entityType.AsType();
                     if (im == null) im = entityType.AsType();
 
-                    // There's no 'real' controller for this entity, so add the generic version.
-
                     if (EnableModelMapping || EnableDTOMapping)
                     {
                         var dtoController = EntityTypes.GetTypeFromAssembly("GenericApi.DTOController`5", "GenericApi.Extensions.Model");
                         var controllerType = dtoController.MakeGenericType(entityType.AsType(), im, vm, idType, Options.db).GetTypeInfo();
                         feature.Controllers.Add(controllerType);
 
+                        //todo: implement this controller in Extensions.Model
                         // var dtoMvcController = EntityTypes.GetTypeFromAssembly("GenericApi.MvcDTOController`5", "GenericApi.Extensions.Model");
-                        // var mvcControllerType = dtoController.MakeGenericType(entityType.AsType(), im, vm, idType, Options.db).GetTypeInfo();
+                        // var mvcControllerType = dtoMvcController.MakeGenericType(entityType.AsType(), im, vm, idType, Options.db).GetTypeInfo();
                         // feature.Controllers.Add(mvcControllerType);
                     }
                     else
