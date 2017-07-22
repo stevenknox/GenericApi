@@ -4,21 +4,20 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>0.8.0</Version>
+    <Version>0.8.1</Version>
     <Authors>Steven Knox</Authors>
     <Company />
-    <Description>Generic WebAPI and Repository for AspNetCore</Description>
+    <Description>Generic WebAPI and Repository for AspNetCore 2.0</Description>
     <PackageLicenseUrl>https://github.com/stevenknox/GenericApi/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/stevenknox/GenericApi</PackageProjectUrl>
     <PackageReleaseNotes></PackageReleaseNotes>
     <Copyright>Copyright Steven Knox 2017</Copyright>
-    <AssemblyVersion>0.8.0.0</AssemblyVersion>
-    <FileVersion>0.8.0.0</FileVersion>
-    <PackageTags>aspnetcore, webapi, mvc, aspnet</PackageTags>
+    <AssemblyVersion>0.8.1.0</AssemblyVersion>
+    <FileVersion>0.8.1.0</FileVersion>
+    <PackageTags>aspnetcore, webapi, mvc, aspnet, netcoreapp2.0, aspnetcore2.0, genericapi</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="6.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0-preview2-final" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.0-preview2-final" PrivateAssets="All" />
   </ItemGroup>

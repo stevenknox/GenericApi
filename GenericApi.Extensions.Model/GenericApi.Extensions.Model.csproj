@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <Version>0.8.0</Version>
+    <Version>0.8.1</Version>
     <Description>Model Extensions for GenericAPI</Description>
     <Copyright>Copyright Steven Knox 2017</Copyright>
     <PackageLicenseUrl>https://github.com/stevenknox/GenericApi/blob/master/LICENSE</PackageLicenseUrl>
@@ -11,9 +11,9 @@
     <Company>Steven Knox</Company>
     <Product>Steven Knox</Product>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <AssemblyVersion>0.8.0.0</AssemblyVersion>
-    <FileVersion>0.8.0.0</FileVersion>
-    <PackageTags>genericapi, aspnetcore, webapi, mvc, aspnet</PackageTags>
+    <AssemblyVersion>0.8.1.0</AssemblyVersion>
+    <FileVersion>0.8.1.0</FileVersion>
+    <PackageTags>genericapi, aspnetcore, webapi, mvc, aspnet, netcoreapp2.0, aspnetcore2.0, genericapi</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
