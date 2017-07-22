@@ -2,6 +2,8 @@
 
 # Generic WebAPI and Repository for AspNetCore 2.0
 
+> For AspnetCore 1.1 use GenericApi 0.7 and GenericApi.ModelExtensions 0.7
+
 Middleware to dynamically generate WebAPI controllers and Repository Layer for any Model that has been registered as a DBSet in EFCore. Simply decorate your Model class or inherit from a base GenericModel class, register the middleware in your startup class and it will create full a full API with the underlying CRUD repository layer.
 
 
