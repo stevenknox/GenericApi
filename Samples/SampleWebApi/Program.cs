@@ -1,25 +1,50 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using SampleWebApi.Data;
 
 namespace SampleWebApi
 {
     public class Program
     {
-        public static void Main(string[] args)
+      public static void Main(string[] args)
         {
-            var host = new WebHostBuilder()
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
-                .UseStartup<Startup>()
-                .UseApplicationInsights()
-                .Build();
+            BuildWebHost(args)
+            .MigrateDatabase()
+            .Run();
+        }
 
-            host.Run();
+        public static IWebHost BuildWebHost(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>()
+                .Build();
+    }
+
+    //https://github.com/aspnet/EntityFramework/issues/9033
+    public static class Ext
+    {
+        public static IWebHost MigrateDatabase(this IWebHost webHost)
+        {
+            using (var scope = webHost.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+
+                try
+                {
+                    var db = services.GetRequiredService<StoreDbContext>();
+                     DataSeeder.Initialize(db);
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred while migrating the database.");
+                }
+            }
+
+             return webHost;
         }
     }
+    
 }

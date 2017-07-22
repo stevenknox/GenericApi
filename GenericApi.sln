@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenericApi.Tests", "Generic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleWebApi", "Samples\SampleWebApi\SampleWebApi.csproj", "{53F14A9F-59DA-4CAE-8CE3-5366442B770B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenericApi.ModelExtensions", "GenericApi.ModelExtensions\GenericApi.ModelExtensions.csproj", "{A3A48707-80E6-4D40-9B22-18674897DFA9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenericApi.Extensions.Model", "GenericApi.Extensions.Model\GenericApi.Extensions.Model.csproj", "{A3A48707-80E6-4D40-9B22-18674897DFA9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleWebApiWithDTO", "Samples\SampleWebApiWithDTO\SampleWebApiWithDTO.csproj", "{FAE5AAF6-23EC-4C1C-8659-19AF8B629945}"
 EndProject

@@ -23,8 +23,8 @@ namespace GenericApi
         {
             _service = service;
         }
-        [HttpGet("{id}")]
 
+        [HttpGet("{id}")]
         public virtual IActionResult Find(string id)
         {
             object _id = GetIdFromParameter(id);
@@ -74,7 +74,6 @@ namespace GenericApi
 
             return Ok();
         }
-
 
         public static object GetIdFromParameter(string id)
         {

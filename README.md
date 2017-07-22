@@ -130,9 +130,9 @@ I have included a full working sample MVC project along with the source code sho
 
 # What about ViewModels, InputModels and DTO's?
 
-GenericApi can support different models for Input and Views by adding the GenericApi.ModelExtensions package from NuGet to a project that already has GenericApi
+GenericApi can support different models for Input and Views by adding the GenericApi.Extensions.Model package from NuGet to a project that already has GenericApi
 
-    Install-Package GenericApi.ModelExtensions
+    Install-Package GenericApi.Extensions.Model
 
 The extension currently has a dependency on AutoMapper and you must create your mapping profiles to allow the underlying mappings to function.
 

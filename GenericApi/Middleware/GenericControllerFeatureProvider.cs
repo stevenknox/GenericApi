@@ -68,13 +68,13 @@ namespace GenericApi
 
                     if (EnableModelMapping || EnableDTOMapping)
                     {
-                        var dtoController = EntityTypes.GetTypeFromAssembly("GenericApi.DTOController`5", "GenericApi.ModelExtensions");
+                        var dtoController = EntityTypes.GetTypeFromAssembly("GenericApi.DTOController`5", "GenericApi.Extensions.Model");
                         var controllerType = dtoController.MakeGenericType(entityType.AsType(), im, vm, idType, Options.db).GetTypeInfo();
                         feature.Controllers.Add(controllerType);
 
-                        var dtoMvcController = EntityTypes.GetTypeFromAssembly("GenericApi.MvcDTOController`5", "GenericApi.ModelExtensions");
-                        var mvcControllerType = dtoController.MakeGenericType(entityType.AsType(), im, vm, idType, Options.db).GetTypeInfo();
-                        feature.Controllers.Add(mvcControllerType);
+                        // var dtoMvcController = EntityTypes.GetTypeFromAssembly("GenericApi.MvcDTOController`5", "GenericApi.Extensions.Model");
+                        // var mvcControllerType = dtoController.MakeGenericType(entityType.AsType(), im, vm, idType, Options.db).GetTypeInfo();
+                        // feature.Controllers.Add(mvcControllerType);
                     }
                     else
                     {
