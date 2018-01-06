@@ -17,7 +17,7 @@ Under ConfigureServices within the Startup.cs you can enable the generic service
 
      services.AddGenericServices();
 
-You also need to specific the Authorization type by registering a Policy within the AddAuthorization extension and specifying if you wish to AllowAnonymous or Authorize.
+You also need to specifiy the Authorization type by registering a Policy within the AddAuthorization extension and specifying if you wish to AllowAnonymous or Authorize.
 
      services.AddAuthorization(options =>
       {
