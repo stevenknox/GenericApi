@@ -11,26 +11,29 @@ Middleware to dynamically generate WebAPI controllers and Repository Layer for a
 
 Install the package into your Asp.NetCore MVC project
 
-    Install-Package GenericApi
+```ruby
+    dotnet add package GenericApi
+```
 
 Under ConfigureServices within the Startup.cs you can enable the generic service layer by adding the following:
 
+```csharp
      services.AddGenericServices();
-
+```
 You also need to specifiy the Authorization type by registering a Policy within the AddAuthorization extension and specifying if you wish to AllowAnonymous or Authorize.
-
+```csharp
      services.AddAuthorization(options =>
       {
 			options.AddPolicy("SecureGenericApi", policy => 
 			policy.Requirements.Add(new SecureGenericApiRequirement(ApiAuthorization.AllowAnonymous)));
        });
-
+```
 In the same startup method you can register dynamic WebApi controllers by adding the following method to AddMvc(). Replace *SampleWebApi* with the name of the Assembly containing your EF Entities.
-
+```csharp
     services.AddMvc().AddGenericControllers(nameof(StoreWebApi));
-
+```
 A complete ConfigureServices method that includes adding an Entity Framework DbContext may look like:
-
+```csharp
      public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
@@ -48,26 +51,26 @@ A complete ConfigureServices method that includes adding an Entity Framework DbC
 				policy.Requirements.Add(new SecureGenericApiRequirement(ApiAuthorization.AllowAnonymous)));
 			 });
         }
-
+```
 **Note:** Current version can only support generic services for one DbContext. If you have more than one DbContext within your application you must explicitly specify the DbContext to use during the middleware registration
-
+```csharp
     .AddGenericControllers(nameof(StoreWebApi), typeof(StoreDbContext));
-
+```
 To enable dynamic API and Repository generation for your Entity Framework entities ensure it inherits from the *GenericEntity* base class and has a primary key called *Id* . The Id can be any primative type.
-
+```csharp
     public class Product: GenericEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }
     }
-
+```
 This is everything you need to configure, simply launch your application and navigate to the api url in your browser. The url will be in the format */api/entity*, thus if you have an entity named product you can access your WebAPI service via standard Get, Post, Put, Delete requests. eg:
 
     /api/product
     /api/product/1
 
 The underlying repository layer can be accessed using Dependency Injection:
-
+```csharp
 	 private IGenericRepository<Product, StoreDbContext> _repo;
 		
 	 public HomeController(IGenericRepository<Product, StoreDbContext> repo)
@@ -81,23 +84,23 @@ The underlying repository layer can be accessed using Dependency Injection:
 	
 		return View(products);
 	 }
-	
+```
 
 If you have used a primative type other than an *Int* for your Id property you can pass in the type to the repository constructor, for example if you used a GUID:
      
 private IGenericRepository<Product, Guid, StoreDbContext> _service;
-	
+```csharp
     public HomeController(IGenericRepository<Product, Guid, StoreDbContext> service)
      {
          _service = service;
      }
-    
+ ```
 Input can be sanitized for Post and Put requests by passing in your service implementation to 'AddGenericServices' in startup. The service must inherit from IInputSanitizer and implements the method Sanitize. 
-
+```csharp
       services.AddGenericServices(UseSanitizer: typeof(InputSanitizer));
-
+```
 You can provide your own implementation within your InputSanitizer.cs class, for example using the HtmlSanitizer nuget package as follows:
-
+```csharp
     using GenericApi;
     using Ganss.XSS;
     
@@ -113,16 +116,16 @@ You can provide your own implementation within your InputSanitizer.cs class, for
             }
         }
     }
-
+```
 You can also add this to other Controllers in your project by using the  [SanitizeModel] attribute.
-
+```csharp
 	[HttpPost]
 	[SanitizeModel]
 	public IActionResult Post([FromBody]ProductDTO input)
 	{
 
 	}
-     
+ ``` 
 If you dont register a service IInputSanitizer in your startup.cs this process will be skipped and your API controller will accept any input sent from the client.
 
 I have included a full working sample MVC project along with the source code showing all of the configuration in place.
@@ -136,7 +139,7 @@ GenericApi can support different models for Input and Views by adding the Generi
 The extension currently has a dependency on AutoMapper and you must create your mapping profiles to allow the underlying mappings to function.
 
 The extension package gives you extra options when configuring your Startup.cs class
-
+```csharp
       services.
                AddMvc().
                  AddGenericControllers(new OptionsBuilder
@@ -147,7 +150,7 @@ The extension package gives you extra options when configuring your Startup.cs c
                      UseInputModels = true,
                      UseViewModels = true,
                  });
-
+```
 When this configuration is in place, GenericApi will scan your the assembly containing your entities for matching ViewModel and InputModel classes and if found will register those for use. For example a Product class with an Input and ViewModel would have 3 classes:
 
  - Product.cs
@@ -165,7 +168,7 @@ You dont have to have both the ViewModel and InputModel in place. If for example
  - OrderInputModel.cs
 
 You can also use the same class for both Input and View Models by using the DTO format. Under Startup.cs use:
-
+```csharp
      services.
                AddMvc().
                  AddGenericControllers(new OptionsBuilder
@@ -175,11 +178,11 @@ You can also use the same class for both Input and View Models by using the DTO 
                      EntityAssemblyName = nameof(StoreWebApi),
                      UseDTOs = true
                  });
-
+```
 And you can create one additional class ProductDTO.cs that will be used for both Input and View Models.
 
 EFCore does not support Lazy Loading yet so to allow you to return data from related entities you can use the *MapToEntity* decorator on your ViewModel. For example a Product entity with a related ProductType entity:
-
+```csharp
      public class Product: GenericEntity
     {
         public int Id { get; set; }
@@ -189,9 +192,9 @@ EFCore does not support Lazy Loading yet so to allow you to return data from rel
         public int ProductTypeId { get; set; }
         public ProductType ProductType { get; set; }
     }
-
+```
 To return the Product Type with your Product data you can update your ViewModel to look like:
-
+```csharp
      public class ProductViewModel
     {
         public int Id { get; set; }
@@ -201,9 +204,9 @@ To return the Product Type with your Product data you can update your ViewModel 
         [MapToEntity(typeof(ProductType))]
         public string ProductTypeName { get; set; }
     }
-
+```
 The above using strong typing to specify the related entity, however we can also pass in a string to access the related entity, or of we want to chain related entities. An example Order class could be:
-
+```csharp
     public class Order : GenericEntity
     {
         public int Id { get; set; }
@@ -213,14 +216,14 @@ The above using strong typing to specify the related entity, however we can also
         public int ProductId { get; set; }
         public Product Product { get; set; }
     }
-
+```
 With an AutoMapper profile containing:
-
+```csharp
       CreateMap<Order, OrderViewModel>();
       CreateMap<OrderInputModel, Order>();
-
+```
 If we wanted the OrderViewModel to include both the Product and the Product Type we could update our ViewModel to :
-
+```csharp
     public class OrderViewModel
     {
         public int Id { get; set; }
@@ -230,7 +233,7 @@ If we wanted the OrderViewModel to include both the Product and the Product Type
         public string ProductTypeName { get; set; }
         public int Quantity { get; set; }
     }
-
+```
 I have included a working example with DTOs along with the source.
 
 Please feel free to dig into the code and open a pull request with improvements, bug fixes and new features! 
