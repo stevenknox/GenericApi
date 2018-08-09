@@ -133,9 +133,9 @@ I have included a full working sample MVC project along with the source code sho
 # What about ViewModels, InputModels and DTO's?
 
 GenericApi can support different models for Input and Views by adding the GenericApi.Extensions.Model package from NuGet to a project that already has GenericApi
-
-    Install-Package GenericApi.Extensions.Model
-
+```ruby
+    dotnet add package GenericApi.Extensions.Model
+```
 The extension currently has a dependency on AutoMapper and you must create your mapping profiles to allow the underlying mappings to function.
 
 The extension package gives you extra options when configuring your Startup.cs class
@@ -158,10 +158,10 @@ When this configuration is in place, GenericApi will scan your the assembly cont
  - ProductInputModel.cs
 
 We would also have our corresponding AutoMapper Profile class with the following:
-
+```csharp
      CreateMap<Product, ProductViewModel>();
      CreateMap<ProductInputModel, Product>();
-
+```
 You dont have to have both the ViewModel and InputModel in place. If for example you have an Order entity that accepts an InputModel but returns the full entity rather than an Order ViewModel, you would have 2 classes:
 
  - Order.cs
