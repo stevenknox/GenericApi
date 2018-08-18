@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace GenericApi
 {
@@ -10,6 +11,7 @@ namespace GenericApi
         public GenericDbContext(DbContextOptions<GenericDbContext> options)
             : base(options)
         { }
+
     }
 
 }

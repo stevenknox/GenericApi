@@ -29,8 +29,8 @@ namespace GenericApi.Tests
 
             using (var context = new SampleContext(options))
             {
-                var service = new GenericRepositorySimple<Blog, SampleContext>(context);
-                var controller = new GenericController<Blog, int, SampleContext>(service);
+                var service = new GenericRepository<Blog, SampleContext>(context);
+                var controller = new GenericController<Blog, SampleContext>(service);
 
                 var response = controller.Get() as OkObjectResult;
                 sut = response.Value as List<Blog>;
@@ -49,8 +49,8 @@ namespace GenericApi.Tests
 
             using (var context = new SampleContext(options))
             {
-                var service = new GenericRepositorySimple<Blog, SampleContext>(context);
-                var controller = new GenericController<Blog, int, SampleContext>(service);
+                var service = new GenericRepository<Blog, SampleContext>(context);
+                var controller = new GenericController<Blog, SampleContext>(service);
 
                 var response = controller.Find(entity.Id.ToString()) as OkObjectResult;
                 sut = response.Value as Blog;
@@ -67,8 +67,8 @@ namespace GenericApi.Tests
             var data = $"New Entity from {nameof(GenericController_Should_CreateEntity)} ";
             using (var context = new SampleContext(options))
             {
-                var service = new GenericRepositorySimple<Blog, SampleContext>(context);
-                var controller = new GenericController<Blog, int, SampleContext>(service);
+                var service = new GenericRepository<Blog, SampleContext>(context);
+                var controller = new GenericController<Blog, SampleContext>(service);
 
                 controller.Post(new Blog { Name = data });
             }
@@ -88,8 +88,8 @@ namespace GenericApi.Tests
 
             using (var context = new SampleContext(options))
             {
-                var service = new GenericRepositorySimple<Blog, SampleContext>(context);
-                var controller = new GenericController<Blog, int, SampleContext>(service);
+                var service = new GenericRepository<Blog, SampleContext>(context);
+                var controller = new GenericController<Blog, SampleContext>(service);
 
                 //make our changes
                 sut.Name = updatedData;
@@ -111,8 +111,8 @@ namespace GenericApi.Tests
 
             using (var context = new SampleContext(options))
             {
-                var service = new GenericRepositorySimple<Blog, SampleContext>(context);
-                var controller = new GenericController<Blog, int, SampleContext>(service);
+                var service = new GenericRepository<Blog, SampleContext>(context);
+                var controller = new GenericController<Blog, SampleContext>(service);
 
                 controller.Delete(sut.Id.ToString());
             }
@@ -132,8 +132,8 @@ namespace GenericApi.Tests
 
             using (var context = new SampleContext(options))
             {
-                var service = new GenericRepository<EntityWithGuid, Guid, SampleContext>(context);
-                var controller = new GenericController<EntityWithGuid, Guid, SampleContext>(service);
+                var service = new GenericRepository<EntityWithGuid, SampleContext>(context);
+                var controller = new GenericController<EntityWithGuid, SampleContext>(service);
 
                 //make our changes
                 sut.Name = updatedData;
@@ -156,8 +156,8 @@ namespace GenericApi.Tests
 
             using (var context = new SampleContext(options))
             {
-                var service = new GenericRepository<EntityWithGuid, Guid, SampleContext>(context);
-                var controller = new GenericController<EntityWithGuid, Guid, SampleContext>(service);
+                var service = new GenericRepository<EntityWithGuid, SampleContext>(context);
+                var controller = new GenericController<EntityWithGuid, SampleContext>(service);
 
                 var response = controller.Find(entity.Id.ToString()) as OkObjectResult;
                 sut = response.Value as EntityWithGuid;

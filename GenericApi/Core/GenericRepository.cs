@@ -6,12 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GenericApi
 {
-    public class GenericRepositorySimple<T, TContext> : GenericRepository<T, int, TContext>, IGenericRepository<T, TContext> where T : GenericEntity where TContext: DbContext
-    {
-        public GenericRepositorySimple(TContext context):base(context){ }
-    }
-
-    public class GenericRepository<T, Tid, TContext> : IGenericRepository<T, Tid, TContext> where T: GenericEntity where TContext: DbContext
+    public class GenericRepository<T, TContext> : IGenericRepository<T, TContext> where T: class where TContext: DbContext
     {
 
         protected readonly TContext _context;
@@ -93,13 +88,13 @@ namespace GenericApi
 
         public T Add(T entity)
         {
-            entity.EntityState = EntityState.Added;
+            (entity as dynamic).GenericApiState = GenericApiState.Added;
             return AddOrUpdate(entity);
         }
 
         public T Update(T entity)
         {
-            entity.EntityState = EntityState.Modified;
+            (entity as dynamic).GenericApiState = GenericApiState.Modified;
             return AddOrUpdate(entity);
         }
 
@@ -107,7 +102,8 @@ namespace GenericApi
         {
             if (entity != null)
             {
-                _context.ApplyStateChanges(entity, entity.EntityState);
+                GenericApiState state = (entity as dynamic).GenericApiState;
+                _context.ApplyStateChanges(entity, state);
 
                 _context.SaveChanges();
                 return entity;

@@ -2,24 +2,32 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Linq;
 
 namespace GenericApi
 {
 
     [GenericControllerNameConvention]
-    public class GenericController<T, Tid, TContext> : ServiceController<T, Tid, TContext>
+    public class GenericController<T, TContext> : ServiceController<T, TContext>
     {
-        public GenericController(IGenericRepository<T, Tid, TContext> service) : base(service) { }
+        public GenericController(IGenericRepository<T, TContext> service) : base(service) { }
+    }
+
+    [Route("api/[controller]s")] //very crude example, have an option to set plural and have dep of humanizer if they want to do this
+    public class GenericControllerPluralized<T, TContext> : GenericController<T, TContext>
+    {
+        public GenericControllerPluralized(IGenericRepository<T, TContext> service) : base(service) { }
     }
 
     [Produces("application/json")]
     [Route("api/[controller]")]
     [Authorize(Policy = "SecureGenericApi")]
-    public class ServiceController<T, Tid, TContext> : Controller 
+    public class ServiceController<T, TContext> : Controller 
     {
-        private IGenericRepository<T, Tid, TContext> _service;
+        private IGenericRepository<T, TContext> _service;
 
-        public ServiceController(IGenericRepository<T, Tid, TContext> service)
+        public ServiceController(IGenericRepository<T, TContext> service)
         {
             _service = service;
         }
@@ -78,7 +86,7 @@ namespace GenericApi
         public static object GetIdFromParameter(string id)
         {
             //MVC doesnt like having Tid as the param type so we must type as string and cast
-            var targetType = typeof(T).GetProperty("Id").PropertyType;
+            Type targetType =  typeof(T).GetGenericApiPrimaryKey().PropertyType;
 
             var _id = id.ConvertTo(targetType);
             return _id;

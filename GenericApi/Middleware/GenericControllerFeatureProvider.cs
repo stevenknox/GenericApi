@@ -30,7 +30,7 @@ namespace GenericApi
             if (Options.db == null)
                 Options.db = EntityTypes.GetTypesFromAssembly(typeof(DbContext), Options.GetDbAssembly()).FirstOrDefault().AsType();
 
-            foreach (var entityType in EntityTypes.GetTypesFromAssembly(typeof(IHasGenericRepository), Options.EntityAssemblyName))
+            foreach (var entityType in EntityTypes.GetTypesFromAssembly(typeof(IGenericApi), Options.EntityAssemblyName))
             {
                 var typeName = entityType.Name + "Controller";
                 if (!feature.Controllers.Any(t => t.Name == typeName))
@@ -66,7 +66,7 @@ namespace GenericApi
 
                     if (EnableModelMapping || EnableDTOMapping)
                     {
-                        var dtoController = EntityTypes.GetTypeFromAssembly("GenericApi.DTOController`5", "GenericApi.Extensions.Model");
+                        var dtoController = EntityTypes.GetTypeFromAssembly("GenericApi.DTOController`4", "GenericApi.Extensions.Model");
                         var controllerType = dtoController.MakeGenericType(entityType.AsType(), im, vm, idType, Options.db).GetTypeInfo();
                         feature.Controllers.Add(controllerType);
 
@@ -77,11 +77,13 @@ namespace GenericApi
                     }
                     else
                     {
-                        var controllerType = typeof(GenericController<,,>).MakeGenericType(entityType.AsType(), idType, Options.db).GetTypeInfo();
+                        var controllerType = typeof(GenericController<,>).MakeGenericType(entityType.AsType(), Options.db).GetTypeInfo();
+                        var controllerTypePlural = typeof(GenericControllerPluralized<,>).MakeGenericType(entityType.AsType(), Options.db).GetTypeInfo();
                         feature.Controllers.Add(controllerType);
+                        feature.Controllers.Add(controllerTypePlural);
 
                         //mvc
-                        var mvcControllerType = typeof(GenericMVCController<,,>).MakeGenericType(entityType.AsType(), idType, Options.db).GetTypeInfo();
+                        var mvcControllerType = typeof(MvcController<,>).MakeGenericType(entityType.AsType(), Options.db).GetTypeInfo();
                         feature.Controllers.Add(mvcControllerType);
                     }
                     

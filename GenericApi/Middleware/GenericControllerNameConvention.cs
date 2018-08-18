@@ -12,7 +12,7 @@ namespace GenericApi
          public void Apply(ControllerModel controller)
         {
             var x = controller.ControllerType.GetGenericTypeDefinition();
-            if (x != typeof(GenericController<,,>) && ! x.Name.Contains("DTOController`5") && x != typeof(GenericMVCController<,,>) && x.Name.Contains("MvcDTOController`5"))
+            if (x != typeof(GenericController<,>) && ! x.Name.Contains("DTOController`4") && x != typeof(MvcController<,>) && x.Name.Contains("MvcDTOController`4"))
             {
                 throw new Exception("Not a generic controller!");
             }

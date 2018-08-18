@@ -15,8 +15,7 @@ namespace GenericApi
         }
         public static void AddGenericServices(this IServiceCollection services, Type UseSanitizer)
         {
-            services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepositorySimple<,>));
-            services.AddScoped(typeof(IGenericRepository<,,>), typeof(GenericRepository<,,>));
+            services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
             services.AddSingleton<IAuthorizationHandler, SecureGenericApiHandler>();
             services.AddTransient(typeof(IInputSanitizer), UseSanitizer);
         }

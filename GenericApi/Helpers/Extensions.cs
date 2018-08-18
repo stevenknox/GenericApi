@@ -21,6 +21,14 @@ namespace GenericApi
             return obj as JObject;
         }
 
+        public static PropertyInfo GetGenericApiPrimaryKey(this Type type)
+        {
+            if(type.GetProperty("Id") != null)
+                return type.GetProperty("Id");
+            else
+              return type.GetProperties().FirstOrDefault(prop => Attribute.IsDefined(prop, typeof(GenericApiKeyAttribute)));
+        }
+
         public static Expression<Func<T, object>[]> MapIncludes<T>(this List<string> props)
         {
             var param = Expression.Parameter(typeof(T), "p");
@@ -130,22 +138,22 @@ namespace GenericApi
         }
 
       
-        public static void ApplyStateChanges(this DbContext context, GenericEntity entity, EntityState state)
+        public static void ApplyStateChanges(this DbContext context, object entity, GenericApiState state)
         {
             context.ChangeTracker.TrackGraph(entity, e => e.Entry.State = GetEntityState(state));
         }
         
-        public static Microsoft.EntityFrameworkCore.EntityState GetEntityState(EntityState entityState)
+        public static Microsoft.EntityFrameworkCore.EntityState GetEntityState(GenericApiState entityState)
         {
             switch (entityState)
             {
-                case EntityState.Unchanged:
+                case GenericApiState.Unchanged:
                     return Microsoft.EntityFrameworkCore.EntityState.Unchanged;
-                case EntityState.Added:
+                case GenericApiState.Added:
                     return Microsoft.EntityFrameworkCore.EntityState.Added;
-                case EntityState.Modified:
+                case GenericApiState.Modified:
                     return Microsoft.EntityFrameworkCore.EntityState.Modified;
-                case EntityState.Deleted:
+                case GenericApiState.Deleted:
                     return Microsoft.EntityFrameworkCore.EntityState.Deleted;
                 default:
                     return Microsoft.EntityFrameworkCore.EntityState.Detached;

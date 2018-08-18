@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace GenericApi
 {
-    public class GenericEntity: IHasGenericRepository, IEntityWithState
+    public class GenericEntity : IGenericApi
     {
-        [NotMappedAttribute]
-        public EntityState EntityState { get; set; }
+        [JsonIgnore]
+        public GenericApiState GenericApiState { get; set; }
     }
 }

@@ -8,18 +8,13 @@ namespace GenericApi
 {
 
     [GenericControllerNameConvention]
-    public class GenericMVCController<T, Tid, TContext> : MvcController<T, Tid, TContext>
-    {
-        public GenericMVCController(IGenericRepository<T, Tid, TContext> service) : base(service) { }
-    }
-
     [Route("[controller]")]
     [Authorize(Policy = "SecureGenericApi")]
-    public class MvcController<T, Tid, TContext> : Controller 
+    public class MvcController<T, TContext> : Controller 
     {
-        private IGenericRepository<T, Tid, TContext> _service;
+        private IGenericRepository<T, TContext> _service;
 
-        public MvcController(IGenericRepository<T, Tid, TContext> service)
+        public MvcController(IGenericRepository<T, TContext> service)
         {
             _service = service;
         }

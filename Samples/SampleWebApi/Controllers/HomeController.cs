@@ -10,8 +10,8 @@ namespace SampleWebApi.Controllers
 {
     public class HomeController : Controller
     {
-        private IGenericRepository<Product, Guid, StoreDbContext> _service;
-        public HomeController(IGenericRepository<Product, Guid, StoreDbContext> service)
+        private IGenericRepository<Product, StoreDbContext> _service;
+        public HomeController(IGenericRepository<Product, StoreDbContext> service)
         {
             _service = service;
         }

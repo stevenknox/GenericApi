@@ -24,6 +24,17 @@ namespace SampleWebApi.Data
             {
                 context.Products.Add(s);
             }
+
+            var orders = new Order[]
+            {
+                new Order{ProductId=1, Quantity=5},
+                new Order{ProductId=2, Quantity=1},
+                new Order{ProductId=3, Quantity=4},
+            };
+            foreach (Order s in orders)
+            {
+                context.Orders.Add(s);
+            }
             context.SaveChanges();
 
         }

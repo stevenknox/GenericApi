@@ -28,7 +28,7 @@ namespace GenericApi.Tests
             List<Blog> sut;
             using (var context = new SampleContext(options))
             {
-                var service = new GenericRepositorySimple<Blog, SampleContext>(context);
+                var service = new GenericRepository<Blog, SampleContext>(context);
 
                 sut = service.GetAll();
             }
@@ -44,7 +44,7 @@ namespace GenericApi.Tests
             var data = $"New Entity from {nameof(GenericService_Should_SaveEntity)} ";
             using (var context = new SampleContext(options))
             {
-                var service = new GenericRepositorySimple<Blog, SampleContext>(context);
+                var service = new GenericRepository<Blog, SampleContext>(context);
 
                 service.Add(new Blog { Name = data });
             }
@@ -62,7 +62,7 @@ namespace GenericApi.Tests
             var data = $"New Entity from {nameof(GenericService_Should_SaveEntityGraph)} ";
             using (var context = new SampleContext(options))
             {
-                var service = new GenericRepositorySimple<Blog, SampleContext>(context);
+                var service = new GenericRepository<Blog, SampleContext>(context);
 
                 var blog = new Blog { Name = data };
                 blog.Posts.Add(new Post { Blog = blog, Content = "Blog Post", Title = "Post Title" });

@@ -1,12 +1,17 @@
-﻿using GenericApi;
+﻿using System;
+using GenericApi;
+using Newtonsoft.Json;
 
 namespace SampleWebApi.Models
 {
-    public class Order: GenericEntity
+    public class Order: IGenericApi
     {
-        public int Id { get; set; }
+        [GenericApiKey]
+        public Guid OrderId { get; set; }
         public int ProductId { get; set; }
         public int Quantity { get; set; }
         public int Total { get; set; }
+        [JsonIgnore]
+        public GenericApiState GenericApiState { get ; set; }
     }
 }

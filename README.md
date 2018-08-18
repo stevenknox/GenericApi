@@ -2,7 +2,7 @@
 
 # Generic WebAPI and Repository for AspNetCore 2.0
 
-> For AspNetCore 1.1 use GenericApi 0.7 and GenericApi.ModelExtensions 0.7
+> GenericApi 1.1 introduces a breaking change, replacing IHasGenericRepository with IGenericApi. You can now decorate a class with the new interface and associated GenericApiState property without needing to inherit from the base class making it much easier ot implement in existing projects. 
 
 Middleware to dynamically generate WebAPI controllers and Repository Layer for any Model that has been registered as a DBSet in EFCore. Simply decorate your Model class or inherit from a base GenericModel class, register the middleware in your startup class and it will create full a full API with the underlying CRUD repository layer.
 
@@ -56,7 +56,21 @@ A complete ConfigureServices method that includes adding an Entity Framework DbC
 ```csharp
     .AddGenericControllers(nameof(StoreWebApi), typeof(StoreDbContext));
 ```
-To enable dynamic API and Repository generation for your Entity Framework entities ensure it inherits from the *GenericEntity* base class and has a primary key called *Id* . The Id can be any primative type.
+To enable dynamic API and Repository generation for your Entity Framework entities ensure it inherits the *GenericApi* interface and base class and has a primary key called *Id* . The Id can be any primative type.
+
+```csharp
+    public class Product: IGenericApi
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+
+        [JsonIgnore]
+        public GenericApiState GenericApiState { get; set; }
+    }
+```
+
+You can optionally inherit your entities from the GenericEntity base class.
+
 ```csharp
     public class Product: GenericEntity
     {
