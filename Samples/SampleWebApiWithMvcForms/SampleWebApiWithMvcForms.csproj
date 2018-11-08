@@ -6,11 +6,15 @@
     <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
   </PropertyGroup>
 
- <ItemGroup>
+   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="6.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.4" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\GenericApi.Extensions.Model\GenericApi.Extensions.Model.csproj" />
+    <ProjectReference Include="..\..\GenericApi.Extensions.Mvc\GenericApi.Extensions.Mvc.csproj" />
     <ProjectReference Include="..\..\GenericApi\GenericApi.csproj" />
   </ItemGroup>
 

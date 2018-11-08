@@ -8,15 +8,19 @@ namespace GenericApi
 {
     public static class GenericControllersMiddleware
     {   
-        public static void AddGenericControllers(this IMvcBuilder builder, string assemblyName, Type db = null)
+        public static IMvcBuilder AddGenericControllers(this IMvcBuilder builder, string assemblyName, Type db = null)
         {
             var options = new Options { db = db, EntityAssemblyName = assemblyName };
             builder.ConfigureApplicationPartManager(p => p.FeatureProviders.Add(new GenericControllerFeatureProvider(options)));
+
+            return builder;
         }
 
-        public static void AddGenericControllers(this IMvcBuilder builder, Options options)
+        public static IMvcBuilder AddGenericControllers(this IMvcBuilder builder, Options options)
         {
             builder.ConfigureApplicationPartManager(p => p.FeatureProviders.Add(new GenericControllerFeatureProvider(options)));
+            
+            return builder;
         }
 
 

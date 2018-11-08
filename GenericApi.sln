@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleWebApiWithDTO", "Samp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{691AD735-3794-4BE0-A0FC-E51751005568}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenericApi.Extensions.Mvc", "GenericApi.Extensions.Mvc\GenericApi.Extensions.Mvc.csproj", "{F2E91E61-B7D5-4A97-A361-B319B37066F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleWebApiWithMvcForms", "Samples\SampleWebApiWithMvcForms\SampleWebApiWithMvcForms.csproj", "{BB06D024-CEFC-4336-9C5C-1DE91E2629BC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +45,14 @@ Global
 		{FAE5AAF6-23EC-4C1C-8659-19AF8B629945}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FAE5AAF6-23EC-4C1C-8659-19AF8B629945}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FAE5AAF6-23EC-4C1C-8659-19AF8B629945}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2E91E61-B7D5-4A97-A361-B319B37066F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2E91E61-B7D5-4A97-A361-B319B37066F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2E91E61-B7D5-4A97-A361-B319B37066F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2E91E61-B7D5-4A97-A361-B319B37066F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB06D024-CEFC-4336-9C5C-1DE91E2629BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB06D024-CEFC-4336-9C5C-1DE91E2629BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB06D024-CEFC-4336-9C5C-1DE91E2629BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB06D024-CEFC-4336-9C5C-1DE91E2629BC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,5 +60,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{53F14A9F-59DA-4CAE-8CE3-5366442B770B} = {691AD735-3794-4BE0-A0FC-E51751005568}
 		{FAE5AAF6-23EC-4C1C-8659-19AF8B629945} = {691AD735-3794-4BE0-A0FC-E51751005568}
+		{BB06D024-CEFC-4336-9C5C-1DE91E2629BC} = {691AD735-3794-4BE0-A0FC-E51751005568}
 	EndGlobalSection
 EndGlobal

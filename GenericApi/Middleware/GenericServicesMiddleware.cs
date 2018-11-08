@@ -9,15 +9,17 @@ namespace GenericApi
 {
     public static class GenericServicesMiddleware
     {
-        public static void AddGenericServices(this IServiceCollection services)
+        public static IServiceCollection AddGenericServices(this IServiceCollection services)
         {
-            AddGenericServices(services, typeof(DefaultSanitizer));
+            return AddGenericServices(services, typeof(DefaultSanitizer));
         }
-        public static void AddGenericServices(this IServiceCollection services, Type UseSanitizer)
+        public static IServiceCollection AddGenericServices(this IServiceCollection services, Type UseSanitizer)
         {
             services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
             services.AddSingleton<IAuthorizationHandler, SecureGenericApiHandler>();
             services.AddTransient(typeof(IInputSanitizer), UseSanitizer);
+
+            return services;
         }
 
     }
