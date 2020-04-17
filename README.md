@@ -4,7 +4,7 @@
 
 > GenericApi 1.1 introduces a breaking change, replacing IHasGenericRepository with IGenericApi. You can now decorate a class with the new interface and associated GenericApiState property without needing to inherit from the base class making it much easier ot implement in existing projects. 
 
-Middleware to dynamically generate WebAPI controllers and Repository Layer for any Model that has been registered as a DBSet in EFCore. Simply decorate your Model class or inherit from a base GenericModel class, register the middleware in your startup class and it will create full a full API with the underlying CRUD repository layer.
+Middleware to dynamically generate WebAPI controllers and Repository Layer for any Model that has been registered as a DBSet in EFCore. Simply decorate your Model class or inherit from a base GenericModel class, register the middleware in your startup class and it will create a full API with the underlying CRUD repository layer.
 
 
 **Get Started**
